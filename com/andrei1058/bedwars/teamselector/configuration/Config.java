@@ -15,9 +15,9 @@ public class Config {
     public static void addDefaultConfig() {
         File dir = new File("plugins/BedWars1058/Addons/TeamSelector");
         if (dir.exists()) {
-            dir.mkdirs();
+            dir.mkdir();
         }
-        config = new ConfigManager("config", "plugins/BedWars1058/Addons", false);
+        config = new ConfigManager("config", "plugins/BedWars1058/Addons/TeamSelector", false);
         YamlConfiguration yml = config.getYml();
         yml.options().header("Team Selector Add-on for BedWars1058 Mini-game.\n\nDocumentation:\n" +
                 SELECTOR_ITEM_STACK_MATERIAL + ": WOOL - The material you want the team-selector item be.\n" +
