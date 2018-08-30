@@ -4,9 +4,7 @@ import com.andrei1058.bedwars.api.BedWars;
 import com.andrei1058.bedwars.api.GameAPI;
 import com.andrei1058.bedwars.teamselector.configuration.Config;
 import com.andrei1058.bedwars.teamselector.configuration.Messages;
-import com.andrei1058.bedwars.teamselector.listeners.ArenaJoinListener;
-import com.andrei1058.bedwars.teamselector.listeners.InventoryClickListener;
-import com.andrei1058.bedwars.teamselector.listeners.PlayerInteractListener;
+import com.andrei1058.bedwars.teamselector.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -14,8 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 
-    private static BedWars bw;
-    private static Main plugin;
+    public static BedWars bw;
+    public static Main plugin;
 
     @Override
     public void onEnable() {
@@ -55,7 +53,7 @@ public class Main extends JavaPlugin {
         Messages.setupMessages();
 
         //Register listeners
-        registerListeners(new ArenaJoinListener(), new InventoryClickListener(), new PlayerInteractListener());
+        registerListeners(new ArenaListener(), new InventoryListener(), new PlayerInteractListener(), new SelectorGuiUpdateListener());
     }
 
     /**

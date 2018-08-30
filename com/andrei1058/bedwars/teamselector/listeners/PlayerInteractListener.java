@@ -20,7 +20,7 @@ public class PlayerInteractListener implements Listener {
         if (!Main.nms.isCustomBedWarsItem(i)) return;
         if (Main.nms.getCustomData(i).equals(TeamSelectorGUI.TEAM_SELECTOR_IDENTIFIER)){
             e.setCancelled(true);
-            TeamSelectorGUI.openGUI(e.getPlayer());
+            TeamSelectorGUI.openGUI(e.getPlayer(), false);
         }
     }
 }
