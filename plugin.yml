@@ -1,6 +1,6 @@
 name: BedWars1058-TeamSelector
 author: andrei1058
-version: 0.1 (API 1)
+version: 0.2 (API 1)
 description: Team Selector Add-on for BedWars1058 Minigame.
 website: http://andrei1058.com
 main: com.andrei1058.bedwars.teamselector.Main
