@@ -19,6 +19,7 @@ public class InventoryListener implements Listener {
         ItemStack i = e.getCurrentItem();
         if (i == null) return;
         if (i.getType() == Material.AIR) return;
+        if (TeamSelectorGUI.openGUIs.contains(e.getWhoClicked().getUniqueId())) e.setCancelled(true);
         if (!Main.nms.isCustomBedWarsItem(i)) return;
         String identifier = Main.nms.getCustomData(i);
 
@@ -27,7 +28,11 @@ public class InventoryListener implements Listener {
         } else if (identifier.startsWith(TeamSelectorGUI.TEAM_JOIN_IDENTIFIER)){
             String[] s = identifier.split("_");
             if (s.length == 2){
-                TeamSelectorGUI.joinTeam((Player) e.getWhoClicked(), s[1]);
+                if (TeamSelectorGUI.joinTeam((Player) e.getWhoClicked(), s[1])){
+                    Config.playSound((Player) e.getWhoClicked(), Config.SUCCESS_SOUND);
+                } else {
+                    Config.playSound((Player) e.getWhoClicked(), Config.ERROR_SOUND);
+                }
                 e.getWhoClicked().closeInventory();
             }
         }

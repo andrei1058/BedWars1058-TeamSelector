@@ -42,9 +42,11 @@ public class TeamSelectorGUI {
             TeamSelectorOpenEvent e = new TeamSelectorOpenEvent(player);
             Bukkit.getPluginManager().callEvent(e);
             if (e.isCancelled()) return;
-
-            openGUIs.add(player.getUniqueId());
         }
+
+        //Allowed
+        Config.playSound(player, Config.GUI_OPEN_SOUND);
+        openGUIs.add(player.getUniqueId());
 
         //Create gui
         int size = arena.getTeams().size();
