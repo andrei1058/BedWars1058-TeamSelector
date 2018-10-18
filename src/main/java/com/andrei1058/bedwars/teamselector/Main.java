@@ -4,7 +4,10 @@ import com.andrei1058.bedwars.api.BedWars;
 import com.andrei1058.bedwars.api.GameAPI;
 import com.andrei1058.bedwars.teamselector.configuration.Config;
 import com.andrei1058.bedwars.teamselector.configuration.Messages;
-import com.andrei1058.bedwars.teamselector.listeners.*;
+import com.andrei1058.bedwars.teamselector.listeners.ArenaListener;
+import com.andrei1058.bedwars.teamselector.listeners.InventoryListener;
+import com.andrei1058.bedwars.teamselector.listeners.PlayerInteractListener;
+import com.andrei1058.bedwars.teamselector.listeners.SelectorGuiUpdateListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -27,7 +30,6 @@ public class Main extends JavaPlugin {
 
         //Get api
         try {
-            com.andrei1058.bedwars.Main
             bw = (BedWars) Bukkit.getServicesManager().getRegistration(GameAPI.class).getProvider();
         } catch (Exception ex) {
             getLogger().severe("Can't hook into BedWars1058.");
