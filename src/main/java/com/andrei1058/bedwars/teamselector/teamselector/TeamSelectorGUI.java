@@ -140,7 +140,8 @@ public class TeamSelectorGUI {
             if (selected == null) {
                 inv.setItem(x, new ItemStack(Material.AIR));
             } else {
-                inv.setItem(x, Main.nms.colourItem(new ItemStack(Material.STAINED_GLASS_PANE), selected));
+                String material = com.andrei1058.bedwars.teamselector.Main.getForCurrentVersion("STAINED_GLASS_PANE", "STAINED_GLASS_PANE", "BLACK_STAINED_GLASS_PANE");
+                inv.setItem(x, Main.nms.colourItem(new ItemStack(Material.valueOf(material)), selected));
             }
         }
 
