@@ -71,4 +71,16 @@ public class Main extends JavaPlugin {
         }
     }
 
+    public static String getForCurrentVersion(String v18, String v12, String v13) {
+        switch (com.andrei1058.bedwars.Main.getServerVersion()) {
+            case "v1_12_R1":
+                return v12;
+            case "v1_13_R1":
+            case "v1_13_R2":
+                return v13;
+        }
+        return v18;
+    }
+
+
 }
