@@ -24,7 +24,7 @@ public class InventoryListener implements Listener {
         String identifier = Main.nms.getCustomData(i);
 
         if (identifier.equals(TeamSelectorGUI.TEAM_SELECTOR_IDENTIFIER)){
-            e.setCancelled(Config.config.getBoolean(Config.ALLOW_MOVE_TROUGH_INVENTORY));
+            e.setCancelled(!Config.config.getBoolean(Config.ALLOW_MOVE_TROUGH_INVENTORY));
         } else if (identifier.startsWith(TeamSelectorGUI.TEAM_JOIN_IDENTIFIER)){
             String[] s = identifier.split("_");
             if (s.length == 2){
