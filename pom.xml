@@ -54,9 +54,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.andrei1058</groupId>
+            <groupId>com.andrei1058.bedwars</groupId>
             <artifactId>bedwars</artifactId>
-            <version>11</version>
+            <version>13</version>
             <scope>provided</scope>
         </dependency>
 

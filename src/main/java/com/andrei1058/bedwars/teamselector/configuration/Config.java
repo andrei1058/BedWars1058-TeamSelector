@@ -32,18 +32,18 @@ public class Config {
                 GUI_OPEN_SOUND+": BLOCK_SHULKER_BOX_OPEN - The sound to be played when you open the team selector.\n" +
                 SUCCESS_SOUND+": BLOCK_SHULKER_BOX_CLOSE - The sound to be played when you select a team successfully.\n" +
                 ERROR_SOUND+": BLOCK_ANVIL_DESTROY - The sound to be played when you can't select a team.\n" +
-                "Sounds for 1.9 or newer: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html\n" +
+                "Sounds for latest version: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html\n" +
                 "Sounds for 1.8 or older: http://docs.codelanx.com/Bukkit/1.8/org/bukkit/Sound.html");
 
-        yml.addDefault(SELECTOR_ITEM_STACK_MATERIAL, "WOOL");
+        yml.addDefault(SELECTOR_ITEM_STACK_MATERIAL, com.andrei1058.bedwars.Main.getForCurrentVersion("WOOL", "WOOL", "WHITE_WOOL"));
         yml.addDefault(SELECTOR_SLOT, 4);
         yml.addDefault(GIVE_SELECTOR_SELECTED_TEAM_COLOR, true);
         yml.addDefault(ALLOW_TEAM_CHANGE, true);
         yml.addDefault(ALLOW_MOVE_TROUGH_INVENTORY, false);
         yml.addDefault(BALANCE_TEAMS, true);
-        yml.addDefault(GUI_OPEN_SOUND, "BLOCK_SHULKER_BOX_OPEN");
-        yml.addDefault(SUCCESS_SOUND, "BLOCK_SHULKER_BOX_CLOSE");
-        yml.addDefault(ERROR_SOUND, "BLOCK_ANVIL_DESTROY");
+        yml.addDefault(GUI_OPEN_SOUND, com.andrei1058.bedwars.Main.getForCurrentVersion("CHEST_OPEN", "CHEST_OPEN", "BLOCK_SHULKER_BOX_OPEN"));
+        yml.addDefault(SUCCESS_SOUND, com.andrei1058.bedwars.Main.getForCurrentVersion("CHEST_CLOSE", "CHEST_CLOSE", "BLOCK_SHULKER_BOX_CLOSE"));
+        yml.addDefault(ERROR_SOUND, com.andrei1058.bedwars.Main.getForCurrentVersion("ANVIL_BREAK", "ANVIL_BREAK", "BLOCK_ANVIL_DESTROY"));
         yml.options().copyDefaults(true);
         config.save();
     }
