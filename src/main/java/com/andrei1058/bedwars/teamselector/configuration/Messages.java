@@ -1,6 +1,6 @@
 package com.andrei1058.bedwars.teamselector.configuration;
 
-import com.andrei1058.bedwars.configuration.Language;
+import com.andrei1058.bedwars.language.Language;
 
 import java.util.Arrays;
 
