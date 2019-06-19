@@ -39,8 +39,8 @@ public class Main extends JavaPlugin {
         }
 
         //Check api level
-        if (bw.getApiVersion() < 11) {
-            getLogger().severe("Your BedWars1058 version is outdated. I need API version 10 or higher!");
+        if (bw.getApiVersion() < 13) {
+            getLogger().severe("Your BedWars1058 version is outdated. I need API version 13 or higher!");
             setEnabled(false);
             return;
         }
