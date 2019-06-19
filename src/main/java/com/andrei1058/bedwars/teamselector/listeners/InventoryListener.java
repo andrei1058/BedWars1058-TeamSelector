@@ -40,8 +40,6 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void onInvClose(InventoryCloseEvent e){
-        if (TeamSelectorGUI.openGUIs.contains(e.getPlayer().getUniqueId())){
-            TeamSelectorGUI.openGUIs.remove(e.getPlayer().getUniqueId());
-        }
+        TeamSelectorGUI.openGUIs.remove(e.getPlayer().getUniqueId());
     }
 }
