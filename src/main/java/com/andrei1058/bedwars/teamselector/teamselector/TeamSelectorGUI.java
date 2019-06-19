@@ -5,7 +5,7 @@ import com.andrei1058.bedwars.api.GameState;
 import com.andrei1058.bedwars.api.TeamColor;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.BedWarsTeam;
-import com.andrei1058.bedwars.configuration.Language;
+import com.andrei1058.bedwars.language.Language;
 import com.andrei1058.bedwars.teamselector.api.events.TeamSelectorChooseEvent;
 import com.andrei1058.bedwars.teamselector.api.events.TeamSelectorOpenEvent;
 import com.andrei1058.bedwars.teamselector.configuration.Config;
@@ -140,7 +140,7 @@ public class TeamSelectorGUI {
             if (selected == null) {
                 inv.setItem(x, new ItemStack(Material.AIR));
             } else {
-                String material = com.andrei1058.bedwars.teamselector.Main.getForCurrentVersion("STAINED_GLASS_PANE", "STAINED_GLASS_PANE", "BLACK_STAINED_GLASS_PANE");
+                String material = com.andrei1058.bedwars.Main.getForCurrentVersion("STAINED_GLASS_PANE", "STAINED_GLASS_PANE", "BLACK_STAINED_GLASS_PANE");
                 inv.setItem(x, Main.nms.colourItem(new ItemStack(Material.valueOf(material)), selected));
             }
         }
@@ -180,7 +180,7 @@ public class TeamSelectorGUI {
             if (t.getMembers().size() < bwt.getMembers().size()) {
                 if (Config.config.getBoolean(Config.BALANCE_TEAMS)) {
                     player.sendMessage(Language.getMsg(player, Messages.TEAM_NOT_BALANCED));
-                    return true;
+                    return false;
                 } else if (arena.getStatus() == GameState.starting) {
                     player.sendMessage(Language.getMsg(player, Messages.CANT_JOIN_WHILE_STARTING));
                 }
