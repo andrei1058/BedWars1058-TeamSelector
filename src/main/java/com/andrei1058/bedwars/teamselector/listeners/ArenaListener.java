@@ -17,18 +17,20 @@ import org.bukkit.event.Listener;
 public class ArenaListener implements Listener {
 
     @EventHandler
-    public void onBwArenaJoin(PlayerJoinArenaEvent e){
+    public void onBwArenaJoin(PlayerJoinArenaEvent e) {
         if (e.isSpectator()) return;
         Arena arena = Arena.getArenaByPlayer(e.getPlayer());
         if (arena == null) return;
-        Bukkit.getScheduler().runTaskLater(Main.plugin, () -> {
-            TeamSelectorGUI.giveItem(e.getPlayer(), null);
-        }, 10L);
+        if (arena.getStatus() == GameState.waiting || arena.getStatus() == GameState.starting) {
+            Bukkit.getScheduler().runTaskLater(Main.plugin, () -> {
+                TeamSelectorGUI.giveItem(e.getPlayer(), null);
+            }, 10L);
+        }
     }
 
     @EventHandler
     //Remove player from team
-    public void onBwArenaLeave(PlayerLeaveArenaEvent e){
+    public void onBwArenaLeave(PlayerLeaveArenaEvent e) {
         Arena a = e.getArena();
         if (a.getStatus() == GameState.playing) return;
         if (a.getStatus() == GameState.restarting) return;
@@ -39,27 +41,27 @@ public class ArenaListener implements Listener {
     }
 
     @EventHandler
-    public void onAssign(TeamAssignEvent e){
+    public void onAssign(TeamAssignEvent e) {
         if (e.isCancelled()) return;
 
         //cancel if player have team
-        if (e.getArena().getTeam(e.getPlayer()) != null){
+        if (e.getArena().getTeam(e.getPlayer()) != null) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onStatusChange(GameStateChangeEvent e){
-        if (e.getState() == GameState.starting){
+    public void onStatusChange(GameStateChangeEvent e) {
+        if (e.getState() == GameState.starting) {
             int size = e.getArena().getPlayers().size();
             int teams = 0;
             int members = 0;
-            for (BedWarsTeam t : e.getArena().getTeams()){
+            for (BedWarsTeam t : e.getArena().getTeams()) {
                 if (t.getMembers().isEmpty()) continue;
                 teams++;
-                members+=t.getMembers().size();
+                members += t.getMembers().size();
             }
-            if (size-members <= 0 && teams == 1){
+            if (size - members <= 0 && teams == 1) {
                 e.getArena().setStatus(GameState.waiting);
             }
         }
