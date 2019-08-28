@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="BedWars1058">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../BedWars1058.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

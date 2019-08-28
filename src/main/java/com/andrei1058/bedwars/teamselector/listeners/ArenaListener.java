@@ -1,11 +1,11 @@
 package com.andrei1058.bedwars.teamselector.listeners;
 
 import com.andrei1058.bedwars.Main;
-import com.andrei1058.bedwars.api.*;
-import com.andrei1058.bedwars.api.events.GameStateChangeEvent;
-import com.andrei1058.bedwars.api.events.PlayerJoinArenaEvent;
-import com.andrei1058.bedwars.api.events.PlayerLeaveArenaEvent;
-import com.andrei1058.bedwars.api.events.TeamAssignEvent;
+import com.andrei1058.bedwars.api.arena.GameState;
+import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
+import com.andrei1058.bedwars.api.events.gameplay.TeamAssignEvent;
+import com.andrei1058.bedwars.api.events.player.PlayerJoinArenaEvent;
+import com.andrei1058.bedwars.api.events.player.PlayerLeaveArenaEvent;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.BedWarsTeam;
 import com.andrei1058.bedwars.teamselector.api.events.TeamSelectorAbortEvent;
@@ -22,9 +22,7 @@ public class ArenaListener implements Listener {
         Arena arena = Arena.getArenaByPlayer(e.getPlayer());
         if (arena == null) return;
         if (arena.getStatus() == GameState.waiting || arena.getStatus() == GameState.starting) {
-            Bukkit.getScheduler().runTaskLater(Main.plugin, () -> {
-                TeamSelectorGUI.giveItem(e.getPlayer(), null);
-            }, 10L);
+            Bukkit.getScheduler().runTaskLater(Main.plugin, () -> TeamSelectorGUI.giveItem(e.getPlayer(), null), 10L);
         }
     }
 

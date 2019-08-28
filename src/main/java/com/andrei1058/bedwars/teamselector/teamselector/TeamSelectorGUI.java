@@ -1,8 +1,8 @@
 package com.andrei1058.bedwars.teamselector.teamselector;
 
 import com.andrei1058.bedwars.Main;
-import com.andrei1058.bedwars.api.GameState;
-import com.andrei1058.bedwars.api.TeamColor;
+import com.andrei1058.bedwars.api.arena.GameState;
+import com.andrei1058.bedwars.api.team.TeamColor;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.BedWarsTeam;
 import com.andrei1058.bedwars.language.Language;
@@ -51,7 +51,7 @@ public class TeamSelectorGUI {
         //Create gui
         int size;
 
-        int layer[];
+        int[] layer;
 
         switch (arena.getTeams().size()) {
             default:

@@ -15,7 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 
-    public static BedWars bw;
+    private static BedWars bw;
     public static Main plugin;
 
     @Override
@@ -24,7 +24,7 @@ public class Main extends JavaPlugin {
         //Disable if pl not found
         if (Bukkit.getPluginManager().getPlugin("BedWars1058") == null) {
             getLogger().severe("BedWars1058 was not found. Disabling...");
-            setEnabled(false);
+            Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
@@ -34,14 +34,14 @@ public class Main extends JavaPlugin {
         } catch (Exception ex) {
             getLogger().severe("Can't hook into BedWars1058.");
             ex.printStackTrace();
-            setEnabled(false);
+            Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
         //Check api level
-        if (bw.getApiVersion() < 13) {
-            getLogger().severe("Your BedWars1058 version is outdated. I need API version 13 or higher!");
-            setEnabled(false);
+        if (bw.getApiVersion() < 14) {
+            getLogger().severe("Your BedWars1058 version is outdated. I need API version 14 or higher!");
+            Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
@@ -61,10 +61,8 @@ public class Main extends JavaPlugin {
 
     /**
      * Register listeners
-     *
-     * @since API 1
      */
-    public static void registerListeners(Listener... listeners) {
+    private static void registerListeners(Listener... listeners) {
         PluginManager pm = Bukkit.getPluginManager();
         for (Listener l : listeners) {
             pm.registerEvents(l, plugin);
