@@ -7,8 +7,6 @@ public interface TeamSelectorAPI {
 
     /**
      * Get player's selected team
-     *
-     * @since API 1
      */
     BedWarsTeam getSelectedTeam(Player player);
 

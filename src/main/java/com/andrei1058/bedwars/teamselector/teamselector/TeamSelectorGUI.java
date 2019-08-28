@@ -247,8 +247,6 @@ public class TeamSelectorGUI {
 
     /**
      * Give the team selector item-stack
-     *
-     * @since API 1
      */
     public static void giveItem(Player p, BedWarsTeam team) {
         ItemStack i;
