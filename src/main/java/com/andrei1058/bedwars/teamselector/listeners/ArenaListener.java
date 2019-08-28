@@ -18,11 +18,11 @@ public class ArenaListener implements Listener {
 
     @EventHandler
     public void onBwArenaJoin(PlayerJoinArenaEvent e) {
+        if (e.isCancelled()) return;
         if (e.isSpectator()) return;
-        Arena arena = Arena.getArenaByPlayer(e.getPlayer());
-        if (arena == null) return;
-        if (arena.getStatus() == GameState.waiting || arena.getStatus() == GameState.starting) {
-            Bukkit.getScheduler().runTaskLater(Main.plugin, () -> TeamSelectorGUI.giveItem(e.getPlayer(), null), 10L);
+        if (e.getArena() == null) return;
+        if (e.getArena().getStatus() == GameState.waiting || e.getArena().getStatus() == GameState.starting) {
+            Bukkit.getScheduler().runTaskLater(Main.plugin, () -> TeamSelectorGUI.giveItem(e.getPlayer(), null), 30L);
         }
     }
 
