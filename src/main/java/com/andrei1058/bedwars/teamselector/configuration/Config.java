@@ -16,9 +16,12 @@ public class Config {
      * Setup default config
      */
     public static void addDefaultConfig() {
-        File dir = new File("plugins/BedWars1058/Addons/TeamSelector");
-        if (dir.exists()) {
-            dir.mkdir();
+        File[] dir = {new File("plugins/BedWars1058/Addons"), new File("plugins/BedWars1058/Addons/TeamSelector")};
+        for (File f : dir) {
+            if (f.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                f.mkdir();
+            }
         }
         config = new ConfigManager("config", "plugins/BedWars1058/Addons/TeamSelector", false);
         YamlConfiguration yml = config.getYml();
@@ -28,10 +31,10 @@ public class Config {
                 GIVE_SELECTOR_SELECTED_TEAM_COLOR + ": true - True if you the selector to have the selected team's color.\n" +
                 ALLOW_TEAM_CHANGE + ": true - True if you want to allow players to change selected team.\n" +
                 ALLOW_MOVE_TROUGH_INVENTORY + ": false - True if you want to allow players to move it in inventory.\n" +
-                BALANCE_TEAMS+ ": true - True if you want to have balanced teams size.\n" +
-                GUI_OPEN_SOUND+": BLOCK_SHULKER_BOX_OPEN - The sound to be played when you open the team selector.\n" +
-                SUCCESS_SOUND+": BLOCK_SHULKER_BOX_CLOSE - The sound to be played when you select a team successfully.\n" +
-                ERROR_SOUND+": BLOCK_ANVIL_DESTROY - The sound to be played when you can't select a team.\n" +
+                BALANCE_TEAMS + ": true - True if you want to have balanced teams size.\n" +
+                GUI_OPEN_SOUND + ": BLOCK_SHULKER_BOX_OPEN - The sound to be played when you open the team selector.\n" +
+                SUCCESS_SOUND + ": BLOCK_SHULKER_BOX_CLOSE - The sound to be played when you select a team successfully.\n" +
+                ERROR_SOUND + ": BLOCK_ANVIL_DESTROY - The sound to be played when you can't select a team.\n" +
                 "Sounds for latest version: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html\n" +
                 "Sounds for 1.8 or older: http://docs.codelanx.com/Bukkit/1.8/org/bukkit/Sound.html");
 
@@ -58,18 +61,20 @@ public class Config {
     public static final String SUCCESS_SOUND = "success-sound";
     public static final String ERROR_SOUND = "error-sound";
 
-    /** Play sound */
-    public static void playSound(Player player, String path){
+    /**
+     * Play sound
+     */
+    public static void playSound(Player player, String path) {
         if (player == null) return;
         String sound = Config.config.getString(path);
         try {
             player.playSound(player.getLocation(), Sound.valueOf(sound), 1f, 1f);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             sendSoundLog(sound);
         }
     }
 
-    private static void sendSoundLog(String sound){
-        Main.plugin.getLogger().severe(sound+" it't not a valid sound for "+ com.andrei1058.bedwars.Main.getServerVersion()+"!");
+    private static void sendSoundLog(String sound) {
+        Main.plugin.getLogger().severe(sound + " it't not a valid sound for " + com.andrei1058.bedwars.Main.getServerVersion() + "!");
     }
 }
