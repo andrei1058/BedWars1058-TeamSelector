@@ -128,7 +128,8 @@ public class TeamSelectorGUI {
                 s = s.replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName()).replace("{selected}", String.valueOf(bwt.getMembers().size()))
                         .replace("{total}", String.valueOf(arena.getMaxInTeam()));
                 if (s.contains("{members}")) {
-                    String color = ChatColor.stripColor(s);
+                    s = s.replace("{members}", "");
+                    String color = ChatColor.getLastColors(s);
                     for (Player p : bwt.getMembers()) {
                         lore.add(color + p.getName());
                     }
