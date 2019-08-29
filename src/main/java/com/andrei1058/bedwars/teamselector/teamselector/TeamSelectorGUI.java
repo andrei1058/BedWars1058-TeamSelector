@@ -11,6 +11,7 @@ import com.andrei1058.bedwars.teamselector.api.events.TeamSelectorOpenEvent;
 import com.andrei1058.bedwars.teamselector.configuration.Config;
 import com.andrei1058.bedwars.teamselector.configuration.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -95,7 +96,7 @@ public class TeamSelectorGUI {
                 size = 36;
                 break;
             case 11:
-                layer = new int[]{11, 12, 13, 14, 15 ,19, 20, 21, 23, 24, 25};
+                layer = new int[]{11, 12, 13, 14, 15, 19, 20, 21, 23, 24, 25};
                 size = 36;
                 break;
             case 12:
@@ -125,6 +126,12 @@ public class TeamSelectorGUI {
             for (String s : Language.getList(player, Messages.CHOICE_LORE)) {
                 lore.add(s.replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName()).replace("{selected}", String.valueOf(bwt.getMembers().size()))
                         .replace("{total}", String.valueOf(arena.getMaxInTeam())));
+                if (s.contains("{members}")) {
+                    String color = ChatColor.stripColor(s);
+                    for (Player p : bwt.getMembers()) {
+                        lore.add(color + p.getName());
+                    }
+                }
             }
 
             im.setLore(lore);
@@ -152,7 +159,6 @@ public class TeamSelectorGUI {
      * Add a player to a team
      *
      * @return false if cannot add
-     * @since API 1
      */
     public static boolean joinTeam(Player player, String teamName) {
         Arena arena = Arena.getArenaByPlayer(player);

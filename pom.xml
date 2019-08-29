@@ -57,7 +57,7 @@
         <dependency>
             <groupId>com.andrei1058.bedwars</groupId>
             <artifactId>bedwars</artifactId>
-            <version>14_pre1</version>
+            <version>14_pre4</version>
             <scope>provided</scope>
         </dependency>
 
