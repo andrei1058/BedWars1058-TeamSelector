@@ -21,7 +21,7 @@ public class Messages {
             addDefault(l, TEAM_JOIN,"{prefix}&eYou joined the {color}{team} &eteam!", "{prefix}&eTe-ai alaturat echipei {color}{team}&e!");
             addDefault(l, TEAM_FULL, "{prefix}{color}{team} &c Team is full!", "{prefix}&cEchipa {color}{team} &c este plina!");
             addDefault(l, TEAM_NOT_BALANCED, "{prefix}&cTeams are not balanced! Try joining another team!", "{prefix}&cEchipele nu sunt echilibrate! Încearca alta!");
-            addDefault(l, PARTY_DENIED, "{prefix}&cYou can't choose your team because you're in a party!", "{prefix}&cNu poți alege o echipa pentru că te afli intr-un party!");
+            addDefault(l, PARTY_DENIED, "{prefix}&cYou can't choose your team because you're in a party!", "{prefix}&cNu poti alege o echipa pentru că te afli intr-un party!");
             addDefault(l, CANT_JOIN_WHILE_STARTING, "{prefix}&cYou cannot join this team at this moment. The game is starting!", "{prefix}&cNu poti intra in aceasta echipa chiar acum. Incepe jocul!");
         }
     }
