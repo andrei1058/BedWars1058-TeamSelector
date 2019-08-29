@@ -1,8 +1,8 @@
 package com.andrei1058.bedwars.teamselector.teamselector;
 
 import com.andrei1058.bedwars.Main;
-import com.andrei1058.bedwars.api.GameState;
-import com.andrei1058.bedwars.api.TeamColor;
+import com.andrei1058.bedwars.api.arena.GameState;
+import com.andrei1058.bedwars.api.team.TeamColor;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.BedWarsTeam;
 import com.andrei1058.bedwars.language.Language;
@@ -11,6 +11,7 @@ import com.andrei1058.bedwars.teamselector.api.events.TeamSelectorOpenEvent;
 import com.andrei1058.bedwars.teamselector.configuration.Config;
 import com.andrei1058.bedwars.teamselector.configuration.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -51,7 +52,7 @@ public class TeamSelectorGUI {
         //Create gui
         int size;
 
-        int layer[];
+        int[] layer;
 
         switch (arena.getTeams().size()) {
             default:
@@ -95,7 +96,7 @@ public class TeamSelectorGUI {
                 size = 36;
                 break;
             case 11:
-                layer = new int[]{11, 12, 13, 14, 15 ,19, 20, 21, 23, 24, 25};
+                layer = new int[]{11, 12, 13, 14, 15, 19, 20, 21, 23, 24, 25};
                 size = 36;
                 break;
             case 12:
@@ -120,11 +121,21 @@ public class TeamSelectorGUI {
             i = Main.nms.addCustomData(i, TEAM_JOIN_IDENTIFIER + bwt.getName());
 
             ItemMeta im = i.getItemMeta();
-            im.setDisplayName(Language.getMsg(player, Messages.CHOICE_NAME).replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName()));
+            im.setDisplayName(Language.getMsg(player, Messages.CHOICE_NAME).replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName())
+                    .replace("{selected}", String.valueOf(bwt.getMembers().size())).replace("{total}", String.valueOf(arena.getMaxInTeam())));
             List<String> lore = new ArrayList<>();
             for (String s : Language.getList(player, Messages.CHOICE_LORE)) {
-                lore.add(s.replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName()).replace("{selected}", String.valueOf(bwt.getMembers().size()))
-                        .replace("{total}", String.valueOf(arena.getMaxInTeam())));
+                s = s.replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName()).replace("{selected}", String.valueOf(bwt.getMembers().size()))
+                        .replace("{total}", String.valueOf(arena.getMaxInTeam()));
+                if (s.contains("{members}")) {
+                    s = s.replace("{members}", "");
+                    String color = ChatColor.getLastColors(s);
+                    for (Player p : bwt.getMembers()) {
+                        lore.add(color + p.getName());
+                    }
+                } else {
+                    lore.add(s);
+                }
             }
 
             im.setLore(lore);
@@ -152,7 +163,6 @@ public class TeamSelectorGUI {
      * Add a player to a team
      *
      * @return false if cannot add
-     * @since API 1
      */
     public static boolean joinTeam(Player player, String teamName) {
         Arena arena = Arena.getArenaByPlayer(player);
@@ -218,8 +228,6 @@ public class TeamSelectorGUI {
 
     /**
      * Remove a player from a team added via TeamSelector
-     *
-     * @since API 1
      */
     public static void removePlayerFromTeam(Player player, BedWarsTeam team) {
         team.getMembers().remove(player);
@@ -230,8 +238,6 @@ public class TeamSelectorGUI {
 
     /**
      * Update inventories
-     *
-     * @since API 1
      */
     public static void updateGUIs() {
         for (UUID player : new ArrayList<>(TeamSelectorGUI.openGUIs)) {
@@ -247,8 +253,6 @@ public class TeamSelectorGUI {
 
     /**
      * Give the team selector item-stack
-     *
-     * @since API 1
      */
     public static void giveItem(Player p, BedWarsTeam team) {
         ItemStack i;

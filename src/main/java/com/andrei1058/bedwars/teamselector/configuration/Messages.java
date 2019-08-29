@@ -3,6 +3,7 @@ package com.andrei1058.bedwars.teamselector.configuration;
 import com.andrei1058.bedwars.language.Language;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 public class Messages {
 
@@ -11,42 +12,27 @@ public class Messages {
      */
     public static void setupMessages() {
         for (Language l : Language.getLanguages()) {
-            if (!l.exists(GUI_NAME)) {
-                l.set(GUI_NAME, "&8Team Selector");
-            }
-            if (!l.exists(SELECTOR_NAME)) {
-                l.set(SELECTOR_NAME, "&9Team Selector");
-            }
-            if (!l.exists(SELECTOR_LORE)) {
-                l.set(SELECTOR_LORE, Arrays.asList("&7Right-click to to open!"));
-            }
-            if (!l.exists(CHOICE_LORE)){
-                l.set(CHOICE_LORE, Arrays.asList("", "&f- {selected} players.", "&cClick to join!"));
-            }
-            if (!l.exists(CHOICE_NAME)){
-                l.set(CHOICE_NAME, "{color}{team} &fTeam");
-            }
-            if (!l.exists(SWITCH_DISABLED)){
-                l.set(SWITCH_DISABLED, "{prefix}&cYou cannot change your team!");
-            }
-            if (!l.exists(TEAM_JOIN)){
-                l.set(TEAM_JOIN, "{prefix}&eYou joined {color}{team} &eteam!");
-            }
-            if (!l.exists(TEAM_FULL)){
-                l.set(TEAM_FULL, "{prefix}{color}{team} &c is full!");
-            }
-            if (!l.exists(TEAM_NOT_BALANCED)){
-                l.set(TEAM_NOT_BALANCED, "{prefix}&cTeams are not balanced! Try joining another team!");
-            }
-            if (!l.exists(PARTY_DENIED)){
-                l.set(PARTY_DENIED, "{prefix}&cYou can't choose your team because you're in a party!");
-            }
-            if (!l.exists(CANT_JOIN_WHILE_STARTING)){
-                l.set(CANT_JOIN_WHILE_STARTING, "{prefix}&cYou cannot join this team ar this moment! Try with another!");
-            }
+            addDefault(l, GUI_NAME, "&8Team Selector", "&8Alege o Echipa");
+            addDefault(l, SELECTOR_NAME, "&9Team Selector", "&9Alege o Echipa");
+            addDefault(l, SELECTOR_LORE, Collections.singletonList("&7Right-Click to to open!"), Collections.singletonList("&7Deschide cu click-dreapta!"));
+            addDefault(l, CHOICE_LORE, Arrays.asList("", "&7&o{members}", "", "&eClick to join!"), Arrays.asList("", "&7&o{members}", "", "&eIntra cu Click!"));
+            addDefault(l, CHOICE_NAME, "{color}{team} &f({selected}&7/&f{total})", "{color}{team} &f({selected}&7/&f{total})");
+            addDefault(l, SWITCH_DISABLED, "{prefix}&cYou cannot change your team!", "{prefix}&cPoti alege echipa o singura data!");
+            addDefault(l, TEAM_JOIN,"{prefix}&eYou joined the {color}{team} &eteam!", "{prefix}&eTe-ai alaturat echipei {color}{team}&e!");
+            addDefault(l, TEAM_FULL, "{prefix}{color}{team} &c Team is full!", "{prefix}&cEchipa {color}{team} &c este plina!");
+            addDefault(l, TEAM_NOT_BALANCED, "{prefix}&cTeams are not balanced! Try joining another team!", "{prefix}&cEchipele nu sunt echilibrate! Incearca alta!");
+            addDefault(l, PARTY_DENIED, "{prefix}&cYou can't choose your team because you're in a party!", "{prefix}&cNu poti alege o echipa pentru că te afli intr-un party!");
+            addDefault(l, CANT_JOIN_WHILE_STARTING, "{prefix}&cYou cannot join this team at this moment. The game is starting!", "{prefix}&cNu poti intra in aceasta echipa chiar acum. Incepe jocul!");
         }
     }
 
+    private static void addDefault(Language l, String path, Object english, Object romanian){
+        if (!l.exists(path)){
+            l.set(path, l.getIso().equals("ro") ? romanian : english);
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
     public static final String PATH = "addons.team-selector.";
     public static final String GUI_NAME = PATH + "inventory-name";
     public static final String SELECTOR_NAME = PATH + "selector-name";

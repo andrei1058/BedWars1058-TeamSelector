@@ -6,16 +6,17 @@
 
     <groupId>com.andrei1058.bedwars</groupId>
     <artifactId>team-selector</artifactId>
-    <version>0.3.2 (API 1)</version>
+    <version>0.5.1</version>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -56,7 +57,7 @@
         <dependency>
             <groupId>com.andrei1058.bedwars</groupId>
             <artifactId>bedwars</artifactId>
-            <version>13</version>
+            <version>14_pre4</version>
             <scope>provided</scope>
         </dependency>
 
