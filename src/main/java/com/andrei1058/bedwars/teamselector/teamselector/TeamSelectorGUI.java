@@ -121,7 +121,8 @@ public class TeamSelectorGUI {
             i = Main.nms.addCustomData(i, TEAM_JOIN_IDENTIFIER + bwt.getName());
 
             ItemMeta im = i.getItemMeta();
-            im.setDisplayName(Language.getMsg(player, Messages.CHOICE_NAME).replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName()));
+            im.setDisplayName(Language.getMsg(player, Messages.CHOICE_NAME).replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName())
+                    .replace("{selected}", String.valueOf(bwt.getMembers().size())).replace("{total}", String.valueOf(arena.getMaxInTeam())));
             List<String> lore = new ArrayList<>();
             for (String s : Language.getList(player, Messages.CHOICE_LORE)) {
                 s = s.replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName()).replace("{selected}", String.valueOf(bwt.getMembers().size()))
@@ -226,8 +227,6 @@ public class TeamSelectorGUI {
 
     /**
      * Remove a player from a team added via TeamSelector
-     *
-     * @since API 1
      */
     public static void removePlayerFromTeam(Player player, BedWarsTeam team) {
         team.getMembers().remove(player);
@@ -238,8 +237,6 @@ public class TeamSelectorGUI {
 
     /**
      * Update inventories
-     *
-     * @since API 1
      */
     public static void updateGUIs() {
         for (UUID player : new ArrayList<>(TeamSelectorGUI.openGUIs)) {
