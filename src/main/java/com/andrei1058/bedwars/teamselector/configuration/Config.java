@@ -16,13 +16,10 @@ public class Config {
      * Setup default config
      */
     public static void addDefaultConfig() {
-        File[] dir = {new File("plugins/BedWars1058/Addons"), new File("plugins/BedWars1058/Addons/TeamSelector")};
-        for (File f : dir) {
-            if (!f.exists()) {
-                //noinspection ResultOfMethodCallIgnored
-                f.mkdir();
-            }
-        }
+
+        //noinspection ResultOfMethodCallIgnored
+        new File("plugins/BedWars1058/Addons/TeamSelector").mkdirs();
+
         config = new ConfigManager("config", "plugins/BedWars1058/Addons/TeamSelector", false);
         YamlConfiguration yml = config.getYml();
         yml.options().header("Team Selector Add-on for BedWars1058 Mini-game.\n\nDocumentation:\n" +
