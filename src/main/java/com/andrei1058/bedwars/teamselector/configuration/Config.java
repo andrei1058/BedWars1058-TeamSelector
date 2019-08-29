@@ -18,7 +18,7 @@ public class Config {
     public static void addDefaultConfig() {
         File[] dir = {new File("plugins/BedWars1058/Addons"), new File("plugins/BedWars1058/Addons/TeamSelector")};
         for (File f : dir) {
-            if (f.exists()) {
+            if (!f.exists()) {
                 //noinspection ResultOfMethodCallIgnored
                 f.mkdir();
             }
