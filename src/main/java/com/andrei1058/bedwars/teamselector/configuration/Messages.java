@@ -15,7 +15,7 @@ public class Messages {
             addDefault(l, GUI_NAME, "&8Team Selector", "&8Alege o Echipă");
             addDefault(l, SELECTOR_NAME, "&9Team Selector", "&9Alege o Echipă");
             addDefault(l, SELECTOR_LORE, Collections.singletonList("&7Right-Click to to open!"), Collections.singletonList("&7Deschide cu click-dreapta!"));
-            addDefault(l, CHOICE_LORE, Arrays.asList("", "&7&l{members}", "", "&eClick to join!"), Arrays.asList("", "&7&l{members}", "", "&eIntră cu Click!"));
+            addDefault(l, CHOICE_LORE, Arrays.asList("", "&7&o{members}", "", "&eClick to join!"), Arrays.asList("", "&7&o{members}", "", "&eIntră cu Click!"));
             addDefault(l, CHOICE_NAME, "{color}{team} &f({selected}&7/&f{total})", "{color}{team} &f({selected}&7/&f{total})");
             addDefault(l, SWITCH_DISABLED, "{prefix}&cYou cannot change your team!", "{prefix}&cPoți alege echipa o singură dată!");
             addDefault(l, TEAM_JOIN,"{prefix}&eYou joined the {color}{team} &eteam!", "{prefix}&eTe-ai alăturat echipei {color}{team}&e!");
