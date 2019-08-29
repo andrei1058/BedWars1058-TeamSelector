@@ -124,13 +124,15 @@ public class TeamSelectorGUI {
             im.setDisplayName(Language.getMsg(player, Messages.CHOICE_NAME).replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName()));
             List<String> lore = new ArrayList<>();
             for (String s : Language.getList(player, Messages.CHOICE_LORE)) {
-                lore.add(s.replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName()).replace("{selected}", String.valueOf(bwt.getMembers().size()))
-                        .replace("{total}", String.valueOf(arena.getMaxInTeam())));
+                s = s.replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName()).replace("{selected}", String.valueOf(bwt.getMembers().size()))
+                        .replace("{total}", String.valueOf(arena.getMaxInTeam()));
                 if (s.contains("{members}")) {
                     String color = ChatColor.stripColor(s);
                     for (Player p : bwt.getMembers()) {
                         lore.add(color + p.getName());
                     }
+                } else {
+                    lore.add(s);
                 }
             }
 
