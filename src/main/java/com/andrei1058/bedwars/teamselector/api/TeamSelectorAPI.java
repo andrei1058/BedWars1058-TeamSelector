@@ -1,6 +1,6 @@
 package com.andrei1058.bedwars.teamselector.api;
 
-import com.andrei1058.bedwars.arena.BedWarsTeam;
+import com.andrei1058.bedwars.api.arena.team.ITeam;
 import org.bukkit.entity.Player;
 
 public interface TeamSelectorAPI {
@@ -8,7 +8,7 @@ public interface TeamSelectorAPI {
     /**
      * Get player's selected team
      */
-    BedWarsTeam getSelectedTeam(Player player);
+    ITeam getSelectedTeam(Player player);
 
 
     /** Get api version*/

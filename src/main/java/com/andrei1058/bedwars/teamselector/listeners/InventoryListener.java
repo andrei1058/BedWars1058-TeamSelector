@@ -1,6 +1,6 @@
 package com.andrei1058.bedwars.teamselector.listeners;
 
-import com.andrei1058.bedwars.Main;
+import com.andrei1058.bedwars.teamselector.Main;
 import com.andrei1058.bedwars.teamselector.configuration.Config;
 import com.andrei1058.bedwars.teamselector.teamselector.TeamSelectorGUI;
 import org.bukkit.Material;
@@ -20,8 +20,8 @@ public class InventoryListener implements Listener {
         if (i == null) return;
         if (i.getType() == Material.AIR) return;
         if (TeamSelectorGUI.openGUIs.contains(e.getWhoClicked().getUniqueId())) e.setCancelled(true);
-        if (!Main.nms.isCustomBedWarsItem(i)) return;
-        String identifier = Main.nms.getCustomData(i);
+        if (!Main.bw.getVersionSupport().isCustomBedWarsItem(i)) return;
+        String identifier = Main.bw.getVersionSupport().getCustomData(i);
 
         if (identifier.equals(TeamSelectorGUI.TEAM_SELECTOR_IDENTIFIER)){
             e.setCancelled(!Config.config.getBoolean(Config.ALLOW_MOVE_TROUGH_INVENTORY));
