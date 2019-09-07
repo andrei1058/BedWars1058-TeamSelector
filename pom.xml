@@ -35,7 +35,7 @@
         </repository>
         <repository>
             <id>gitlab-maven</id>
-            <url>https://gitlab.com/api/v4/groups/4800570/-/packages/maven</url>
+            <url>https://gitlab.com/api/v4/groups/3831352/-/packages/maven</url>
         </repository>
     </repositories>
     <dependencies>
