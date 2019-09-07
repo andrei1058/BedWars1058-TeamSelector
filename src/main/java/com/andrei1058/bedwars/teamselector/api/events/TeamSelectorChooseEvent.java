@@ -1,7 +1,7 @@
 package com.andrei1058.bedwars.teamselector.api.events;
 
-import com.andrei1058.bedwars.arena.Arena;
-import com.andrei1058.bedwars.arena.BedWarsTeam;
+import com.andrei1058.bedwars.api.arena.IArena;
+import com.andrei1058.bedwars.api.arena.team.ITeam;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -12,16 +12,14 @@ public class TeamSelectorChooseEvent extends Event {
 
 
     private Player player;
-    private Arena arena;
-    private BedWarsTeam chosen, oldChoice;
+    private IArena arena;
+    private ITeam chosen, oldChoice;
     private boolean cancelled = false;
 
     /**
      * Called when a Player joins a team via team selector
-     *
-     * @since API 1
      */
-    public TeamSelectorChooseEvent(Player player, Arena arena, BedWarsTeam chosen, BedWarsTeam oldChoice) {
+    public TeamSelectorChooseEvent(Player player, IArena arena, ITeam chosen, ITeam oldChoice) {
         this.player = player;
         this.arena = arena;
         this.chosen = chosen;
@@ -30,8 +28,6 @@ public class TeamSelectorChooseEvent extends Event {
 
     /**
      * Get player
-     *
-     * @since API 1
      */
     public Player getPlayer() {
         return player;
@@ -39,19 +35,15 @@ public class TeamSelectorChooseEvent extends Event {
 
     /**
      * Get arena
-     *
-     * @since API 1
      */
-    public Arena getArena() {
+    public IArena getArena() {
         return arena;
     }
 
     /**
      * Get chosen team
-     *
-     * @since API 1
      */
-    public BedWarsTeam getChosen() {
+    public ITeam getChosen() {
         return chosen;
     }
 
@@ -59,9 +51,8 @@ public class TeamSelectorChooseEvent extends Event {
      * Get old choice.
      *
      * @return null if it's the first player's choice
-     * @since API 1
      */
-    public BedWarsTeam getOldChoice() {
+    public ITeam getOldChoice() {
         return oldChoice;
     }
 
@@ -74,8 +65,6 @@ public class TeamSelectorChooseEvent extends Event {
 
     /**
      * If you cancel it and the player's having a team, it will remain in it
-     *
-     * @since API 1
      */
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;

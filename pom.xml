@@ -6,7 +6,7 @@
 
     <groupId>com.andrei1058.bedwars</groupId>
     <artifactId>team-selector</artifactId>
-    <version>0.5.1</version>
+    <version>0.5.2</version>
 
     <build>
         <plugins>
@@ -34,8 +34,8 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>bedwars-repo</id>
-            <url>http://ci.andrei1058.com:8081/repository/BedWars1058/</url>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.com/api/v4/groups/4800570/-/packages/maven</url>
         </repository>
     </repositories>
     <dependencies>
@@ -56,10 +56,20 @@
 
         <dependency>
             <groupId>com.andrei1058.bedwars</groupId>
-            <artifactId>bedwars</artifactId>
-            <version>14_pre4</version>
+            <artifactId>bedwars-api</artifactId>
+            <version>0.14.beta</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.com/api/v4/projects/8145177/packages/maven</url>
+        </repository>
+        <snapshotRepository>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.com/api/v4/projects/8145177/packages/maven</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

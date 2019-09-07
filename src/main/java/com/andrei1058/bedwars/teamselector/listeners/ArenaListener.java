@@ -1,13 +1,13 @@
 package com.andrei1058.bedwars.teamselector.listeners;
 
-import com.andrei1058.bedwars.Main;
 import com.andrei1058.bedwars.api.arena.GameState;
+import com.andrei1058.bedwars.api.arena.IArena;
+import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
 import com.andrei1058.bedwars.api.events.gameplay.TeamAssignEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerJoinArenaEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerLeaveArenaEvent;
-import com.andrei1058.bedwars.arena.Arena;
-import com.andrei1058.bedwars.arena.BedWarsTeam;
+import com.andrei1058.bedwars.teamselector.Main;
 import com.andrei1058.bedwars.teamselector.api.events.TeamSelectorAbortEvent;
 import com.andrei1058.bedwars.teamselector.teamselector.TeamSelectorGUI;
 import org.bukkit.Bukkit;
@@ -29,10 +29,10 @@ public class ArenaListener implements Listener {
     @EventHandler
     //Remove player from team
     public void onBwArenaLeave(PlayerLeaveArenaEvent e) {
-        Arena a = e.getArena();
+        IArena a = e.getArena();
         if (a.getStatus() == GameState.playing) return;
         if (a.getStatus() == GameState.restarting) return;
-        BedWarsTeam t = a.getTeam(e.getPlayer());
+        ITeam t = a.getTeam(e.getPlayer());
         if (t == null) return;
         TeamSelectorGUI.removePlayerFromTeam(e.getPlayer(), t);
         Bukkit.getPluginManager().callEvent(new TeamSelectorAbortEvent(e.getPlayer()));
@@ -50,11 +50,11 @@ public class ArenaListener implements Listener {
 
     @EventHandler
     public void onStatusChange(GameStateChangeEvent e) {
-        if (e.getState() == GameState.starting) {
+        if (e.getNewState() == GameState.starting) {
             int size = e.getArena().getPlayers().size();
             int teams = 0;
             int members = 0;
-            for (BedWarsTeam t : e.getArena().getTeams()) {
+            for (ITeam t : e.getArena().getTeams()) {
                 if (t.getMembers().isEmpty()) continue;
                 teams++;
                 members += t.getMembers().size();

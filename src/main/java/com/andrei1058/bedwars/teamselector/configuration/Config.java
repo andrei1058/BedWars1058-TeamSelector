@@ -1,12 +1,13 @@
 package com.andrei1058.bedwars.teamselector.configuration;
 
-import com.andrei1058.bedwars.configuration.ConfigManager;
+import com.andrei1058.bedwars.api.configuration.ConfigManager;
 import com.andrei1058.bedwars.teamselector.Main;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.util.logging.Level;
 
 public class Config {
 
@@ -20,7 +21,7 @@ public class Config {
         //noinspection ResultOfMethodCallIgnored
         new File("plugins/BedWars1058/Addons/TeamSelector").mkdirs();
 
-        config = new ConfigManager("config", "plugins/BedWars1058/Addons/TeamSelector", false);
+        config = new ConfigManager(Main.plugin, "config", "plugins/BedWars1058/Addons/TeamSelector");
         YamlConfiguration yml = config.getYml();
         yml.options().header("Team Selector Add-on for BedWars1058 Mini-game.\n\nDocumentation:\n" +
                 SELECTOR_ITEM_STACK_MATERIAL + ": WOOL - The material you want the team-selector item be.\n" +
@@ -35,15 +36,15 @@ public class Config {
                 "Sounds for latest version: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html\n" +
                 "Sounds for 1.8 or older: http://docs.codelanx.com/Bukkit/1.8/org/bukkit/Sound.html");
 
-        yml.addDefault(SELECTOR_ITEM_STACK_MATERIAL, com.andrei1058.bedwars.Main.getForCurrentVersion("WOOL", "WOOL", "WHITE_WOOL"));
+        yml.addDefault(SELECTOR_ITEM_STACK_MATERIAL, Main.bw.getForCurrentVersion("WOOL", "WOOL", "WHITE_WOOL"));
         yml.addDefault(SELECTOR_SLOT, 4);
         yml.addDefault(GIVE_SELECTOR_SELECTED_TEAM_COLOR, true);
         yml.addDefault(ALLOW_TEAM_CHANGE, true);
         yml.addDefault(ALLOW_MOVE_TROUGH_INVENTORY, false);
         yml.addDefault(BALANCE_TEAMS, true);
-        yml.addDefault(GUI_OPEN_SOUND, com.andrei1058.bedwars.Main.getForCurrentVersion("CHEST_OPEN", "CHEST_OPEN", "BLOCK_SHULKER_BOX_OPEN"));
-        yml.addDefault(SUCCESS_SOUND, com.andrei1058.bedwars.Main.getForCurrentVersion("CHEST_CLOSE", "CHEST_CLOSE", "BLOCK_SHULKER_BOX_CLOSE"));
-        yml.addDefault(ERROR_SOUND, com.andrei1058.bedwars.Main.getForCurrentVersion("ANVIL_BREAK", "ANVIL_BREAK", "BLOCK_ANVIL_DESTROY"));
+        yml.addDefault(GUI_OPEN_SOUND, Main.bw.getForCurrentVersion("CHEST_OPEN", "CHEST_OPEN", "BLOCK_SHULKER_BOX_OPEN"));
+        yml.addDefault(SUCCESS_SOUND, Main.bw.getForCurrentVersion("CHEST_CLOSE", "CHEST_CLOSE", "BLOCK_SHULKER_BOX_CLOSE"));
+        yml.addDefault(ERROR_SOUND, Main.bw.getForCurrentVersion("ANVIL_BREAK", "ANVIL_BREAK", "BLOCK_ANVIL_DESTROY"));
         yml.options().copyDefaults(true);
         config.save();
     }
@@ -72,6 +73,6 @@ public class Config {
     }
 
     private static void sendSoundLog(String sound) {
-        Main.plugin.getLogger().severe(sound + " it't not a valid sound for " + com.andrei1058.bedwars.Main.getServerVersion() + "!");
+        Main.plugin.getLogger().log(Level.SEVERE, sound + " it't not a valid sound for your server version!");
     }
 }

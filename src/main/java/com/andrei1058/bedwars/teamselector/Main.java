@@ -1,7 +1,8 @@
 package com.andrei1058.bedwars.teamselector;
 
 import com.andrei1058.bedwars.api.BedWars;
-import com.andrei1058.bedwars.api.GameAPI;
+import com.andrei1058.bedwars.teamselector.api.TeamSelector;
+import com.andrei1058.bedwars.teamselector.api.TeamSelectorAPI;
 import com.andrei1058.bedwars.teamselector.configuration.Config;
 import com.andrei1058.bedwars.teamselector.configuration.Messages;
 import com.andrei1058.bedwars.teamselector.listeners.ArenaListener;
@@ -11,11 +12,12 @@ import com.andrei1058.bedwars.teamselector.listeners.SelectorGuiUpdateListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 
-    private static BedWars bw;
+    public static BedWars bw;
     public static Main plugin;
 
     @Override
@@ -28,9 +30,17 @@ public class Main extends JavaPlugin {
             return;
         }
 
+        try {
+            Class.forName("com.andrei1058.bedwars.api.BedWars");
+        } catch (Exception ex){
+            getLogger().severe("Your BedWars1058 version is outdated. Please download the latest version!");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
         //Get api
         try {
-            bw = (BedWars) Bukkit.getServicesManager().getRegistration(GameAPI.class).getProvider();
+            bw = Bukkit.getServicesManager().getRegistration(BedWars.class).getProvider();
         } catch (Exception ex) {
             getLogger().severe("Can't hook into BedWars1058.");
             ex.printStackTrace();
@@ -38,12 +48,7 @@ public class Main extends JavaPlugin {
             return;
         }
 
-        //Check api level
-        if (bw.getApiVersion() < 14) {
-            getLogger().severe("Your BedWars1058 version is outdated. I need API version 14 or higher!");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
+        Bukkit.getServicesManager().register(TeamSelectorAPI.class, new TeamSelector(), this, ServicePriority.Normal);
 
         getLogger().info("Hook into BedWars1058!");
 
