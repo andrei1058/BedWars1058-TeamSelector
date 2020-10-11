@@ -22,7 +22,11 @@ public class ArenaListener implements Listener {
         if (e.isSpectator()) return;
         if (e.getArena() == null) return;
         if (e.getArena().getStatus() == GameState.waiting || e.getArena().getStatus() == GameState.starting) {
-            Bukkit.getScheduler().runTaskLater(Main.plugin, () -> TeamSelectorGUI.giveItem(e.getPlayer(), null), 30L);
+            Bukkit.getScheduler().runTaskLater(Main.plugin, () -> {
+                if (e.getArena().isPlayer(e.getPlayer()) || e.getArena().getStatus() != GameState.playing){
+                    TeamSelectorGUI.giveItem(e.getPlayer(), null);
+                }
+            }, 30L);
         }
     }
 
