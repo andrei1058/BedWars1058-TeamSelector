@@ -196,7 +196,12 @@ public class TeamSelectorGUI {
         //Balance Teams
         for (ITeam t : arena.getTeams()) {
             if (t == bwt) continue;
-            if (t.getMembers().size() < TeamManager.getInstance().getPlayersCount(t, arena)) {
+            int inTeam = TeamManager.getInstance().getPlayersCount(t, arena);
+            if (inTeam >= arena.getMaxInTeam()){
+                player.sendMessage(Language.getMsg(player, Messages.TEAM_NOT_BALANCED));
+                return false;
+            }
+            if (t.getMembers().size() < inTeam) {
                 if (Config.config.getBoolean(Config.BALANCE_TEAMS)) {
                     player.sendMessage(Language.getMsg(player, Messages.TEAM_NOT_BALANCED));
                     return false;
