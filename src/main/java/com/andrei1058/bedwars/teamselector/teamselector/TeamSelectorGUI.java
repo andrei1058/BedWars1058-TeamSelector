@@ -185,9 +185,11 @@ public class TeamSelectorGUI {
         }
 
         String teamDisplayName = bwt.getDisplayName(Main.bw.getPlayerLanguage(player));
+        
+        int playersInTeam = TeamManager.getInstance().getPlayersCount(bwt, arena);
 
         //Check if team is full
-        if (TeamManager.getInstance().getPlayersCount(bwt, arena) >= arena.getMaxInTeam()) {
+        if (playersInTeam >= arena.getMaxInTeam()) {
             player.sendMessage(Language.getMsg(player, Messages.TEAM_FULL).replace("{color}", bwt.getColor().chat().toString()).replace("{team}", teamDisplayName));
             return false;
         }
@@ -197,11 +199,7 @@ public class TeamSelectorGUI {
         for (ITeam t : arena.getTeams()) {
             if (t == bwt) continue;
             int inTeam = TeamManager.getInstance().getPlayersCount(t, arena);
-            if (inTeam >= arena.getMaxInTeam()){
-                player.sendMessage(Language.getMsg(player, Messages.TEAM_FULL).replace("{color}", bwt.getColor().chat().toString()).replace("{team}", teamDisplayName));
-                return false;
-            }
-            if (t.getMembers().size() < inTeam) {
+            if (playersInTeam > inTeam) {
                 if (Config.config.getBoolean(Config.BALANCE_TEAMS)) {
                     player.sendMessage(Language.getMsg(player, Messages.TEAM_NOT_BALANCED));
                     return false;
