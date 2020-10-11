@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="team-selector" />
         <module name="BedWars-TeamSelector" />
         <module name="BedWars1058-TeamSelector" />
       </profile>

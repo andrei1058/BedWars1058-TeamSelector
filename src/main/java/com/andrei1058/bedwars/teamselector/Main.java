@@ -1,7 +1,6 @@
 package com.andrei1058.bedwars.teamselector;
 
 import com.andrei1058.bedwars.api.BedWars;
-import com.andrei1058.bedwars.api.configuration.ConfigManager;
 import com.andrei1058.bedwars.teamselector.api.TeamSelector;
 import com.andrei1058.bedwars.teamselector.api.TeamSelectorAPI;
 import com.andrei1058.bedwars.teamselector.configuration.Config;
