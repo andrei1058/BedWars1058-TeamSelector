@@ -6,9 +6,27 @@ variables:
 image: "maven:latest"
 
 maven-job:
+  except:
+    - 'master'
   script:
-    - 'mvn -DbuildNumber=$CI_PIPELINE_ID clean deploy -s ci_settings.xml'
+    - 'mvn versions:set -DnewVersion=0.6-SNAPSHOT'
+    - 'mvn versions:update-child-modules'
+    - 'mvn -DgitVer=git-$CI_COMMIT_SHORT_SHA- clean deploy -s ci_settings.xml'
   artifacts:
     paths:
       - target/team-selector-*.jar
     expire_in: 1 days
+
+maven-job2:
+  only:
+    - 'master'
+  script:
+    - 'mvn versions:set -DnewVersion=0.6'
+    - 'mvn versions:update-child-modules'
+    - 'mvn -DgitVer=git-$CI_COMMIT_SHORT_SHA- clean deploy -s ci_settings.xml'
+  after_script:
+    - 'apt-get update && apt-get install -y -qq lftp'
+    - 'lftp -c "set ftp:ssl-allow no; open -u $APIDOCS_USER,$APIDOCS_PASS andrei1058.com; mirror -Rev target/apidocs ./$CI_PROJECT_TITLE  --ignore-time --parallel=10 --exclude-glob .git* --exclude .git/"'
+  artifacts:
+    paths:
+      - target/team-selector-*.jar
