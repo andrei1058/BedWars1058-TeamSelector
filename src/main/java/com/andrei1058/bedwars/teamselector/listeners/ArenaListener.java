@@ -45,7 +45,7 @@ public class ArenaListener implements Listener {
         if (e.isCancelled()) return;
 
         ITeam team = TeamManager.getInstance().getPlayerTeam(e.getPlayer(), e.getArena());
-        if (team != null && team.getMembers().size() >= e.getArena().getMaxInTeam()){
+        if (team != null && team.getMembers().size() < e.getArena().getMaxInTeam()){
             e.setCancelled(true);
             team.addPlayers(e.getPlayer());
         }
