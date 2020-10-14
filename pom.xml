@@ -118,6 +118,7 @@
             <groupId>com.andrei1058.bedwars</groupId>
             <artifactId>bedwars-api</artifactId>
             <version>[20.10.1,)</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
