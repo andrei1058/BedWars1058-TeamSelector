@@ -134,6 +134,9 @@ public class TeamSelectorGUI {
                 if (s.contains("{members}")) {
                     s = s.replace("{members}", "");
                     String color = ChatColor.getLastColors(s);
+                    List<Player> members =  TeamManager.getInstance().getMembers(bwt, arena);
+                    // prevent ugly space in lore
+                    if (members.isEmpty()) continue;
                     for (Player p : TeamManager.getInstance().getMembers(bwt, arena)) {
                         lore.add(color + p.getDisplayName());
                     }
@@ -178,6 +181,8 @@ public class TeamSelectorGUI {
 
         ITeam bwt = arena.getTeam(teamName);
         if (bwt == null) return false;
+        ITeam playerSelection = TeamManager.getInstance().getPlayerTeam(player, arena);
+        if (bwt.equals(playerSelection)) return false;
 
         if (Main.bw.getPartyUtil().hasParty(player)) {
             player.sendMessage(Language.getMsg(player, Messages.PARTY_DENIED));
@@ -185,7 +190,7 @@ public class TeamSelectorGUI {
         }
 
         String teamDisplayName = bwt.getDisplayName(Main.bw.getPlayerLanguage(player));
-        
+
         int playersInTeam = TeamManager.getInstance().getPlayersCount(bwt, arena);
 
         //Check if team is full
@@ -207,10 +212,9 @@ public class TeamSelectorGUI {
             }
         }
 
-        ITeam team = TeamManager.getInstance().getPlayerTeam(player, arena);
 
         //Check if can switch again
-        if (team != null) {
+        if (playerSelection != null) {
             if (!Config.config.getBoolean(Config.ALLOW_TEAM_CHANGE)) {
                 player.sendMessage(Language.getMsg(player, Messages.SWITCH_DISABLED));
                 return false;
@@ -218,7 +222,7 @@ public class TeamSelectorGUI {
         }
 
         //Call event
-        TeamSelectorChooseEvent e = new TeamSelectorChooseEvent(player, arena, bwt, team);
+        TeamSelectorChooseEvent e = new TeamSelectorChooseEvent(player, arena, bwt, playerSelection);
         Bukkit.getPluginManager().callEvent(e);
 
         if (e.isCancelled()) {

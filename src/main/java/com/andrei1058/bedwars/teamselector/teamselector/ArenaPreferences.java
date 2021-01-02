@@ -58,4 +58,8 @@ public class ArenaPreferences {
         selections.remove(player);
         selections.put(player, team);
     }
+
+    public HashMap<Player, ITeam> getSelections() {
+        return selections;
+    }
 }

@@ -7,9 +7,12 @@ import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
 import com.andrei1058.bedwars.api.events.gameplay.TeamAssignEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerJoinArenaEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerLeaveArenaEvent;
+import com.andrei1058.bedwars.api.events.server.ArenaDisableEvent;
+import com.andrei1058.bedwars.api.events.server.ArenaEnableEvent;
 import com.andrei1058.bedwars.teamselector.Main;
 import com.andrei1058.bedwars.teamselector.teamselector.ArenaPreferences;
 import com.andrei1058.bedwars.teamselector.teamselector.TeamManager;
+import com.andrei1058.bedwars.teamselector.teamselector.TeamSelectorAssigner;
 import com.andrei1058.bedwars.teamselector.teamselector.TeamSelectorGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -41,17 +44,6 @@ public class ArenaListener implements Listener {
     }
 
     @EventHandler
-    public void onAssign(TeamAssignEvent e) {
-        if (e.isCancelled()) return;
-
-        ITeam team = TeamManager.getInstance().getPlayerTeam(e.getPlayer(), e.getArena());
-        if (team != null && team.getMembers().size() < e.getArena().getMaxInTeam()){
-            e.setCancelled(true);
-            team.addPlayers(e.getPlayer());
-        }
-    }
-
-    @EventHandler
     public void onStatusChange(GameStateChangeEvent e) {
         if (e.getNewState() == GameState.starting) {
 
@@ -69,5 +61,10 @@ public class ArenaListener implements Listener {
         if (e.getNewState() == GameState.playing || e.getNewState() == GameState.restarting){
             TeamManager.getInstance().clearArenaCache(e.getArena());
         }
+    }
+
+    @EventHandler
+    public void onArenaLoad(ArenaEnableEvent event){
+        event.getArena().setTeamAssigner(new TeamSelectorAssigner());
     }
 }
