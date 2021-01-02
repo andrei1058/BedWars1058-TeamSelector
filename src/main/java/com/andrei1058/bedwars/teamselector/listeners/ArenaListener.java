@@ -2,12 +2,9 @@ package com.andrei1058.bedwars.teamselector.listeners;
 
 import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
-import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
-import com.andrei1058.bedwars.api.events.gameplay.TeamAssignEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerJoinArenaEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerLeaveArenaEvent;
-import com.andrei1058.bedwars.api.events.server.ArenaDisableEvent;
 import com.andrei1058.bedwars.api.events.server.ArenaEnableEvent;
 import com.andrei1058.bedwars.teamselector.Main;
 import com.andrei1058.bedwars.teamselector.teamselector.ArenaPreferences;
@@ -27,7 +24,7 @@ public class ArenaListener implements Listener {
         if (e.getArena() == null) return;
         if (e.getArena().getStatus() == GameState.waiting || e.getArena().getStatus() == GameState.starting) {
             Bukkit.getScheduler().runTaskLater(Main.plugin, () -> {
-                if (e.getArena().isPlayer(e.getPlayer()) || e.getArena().getStatus() != GameState.playing){
+                if (e.getArena().isPlayer(e.getPlayer()) || e.getArena().getStatus() != GameState.playing) {
                     TeamSelectorGUI.giveItem(e.getPlayer(), null);
                 }
             }, 30L);
@@ -38,7 +35,7 @@ public class ArenaListener implements Listener {
     //Remove player from team
     public void onBwArenaLeave(PlayerLeaveArenaEvent e) {
         IArena a = e.getArena();
-        if (a.getStatus() == GameState.waiting || a.getStatus() == GameState.starting){
+        if (a.getStatus() == GameState.waiting || a.getStatus() == GameState.starting) {
             TeamManager.getInstance().onQuit(a, e.getPlayer());
         }
     }
@@ -58,13 +55,13 @@ public class ArenaListener implements Listener {
                 e.getArena().setStatus(GameState.waiting);
             }
         }
-        if (e.getNewState() == GameState.playing || e.getNewState() == GameState.restarting){
+        if (e.getNewState() == GameState.playing || e.getNewState() == GameState.restarting) {
             TeamManager.getInstance().clearArenaCache(e.getArena());
         }
     }
 
     @EventHandler
-    public void onArenaLoad(ArenaEnableEvent event){
+    public void onArenaLoad(ArenaEnableEvent event) {
         event.getArena().setTeamAssigner(new TeamSelectorAssigner());
     }
 }

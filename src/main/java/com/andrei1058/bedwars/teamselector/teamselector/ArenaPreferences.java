@@ -16,30 +16,30 @@ public class ArenaPreferences {
 
     private final HashMap<Player, ITeam> selections = new HashMap<>();
 
-    protected ArenaPreferences(IArena arena){
+    protected ArenaPreferences(IArena arena) {
         this.arena = arena;
     }
 
-    public void removePlayer(Player player){
+    public void removePlayer(Player player) {
         // todo refresh guis
-        if (selections.remove(player) != null){
+        if (selections.remove(player) != null) {
             Bukkit.getPluginManager().callEvent(new TeamSelectorAbortEvent(player));
         }
     }
 
-    public ITeam getTeam(Player player){
+    public ITeam getTeam(Player player) {
         return selections.get(player);
     }
 
-    public int getTeamsCount(){
+    public int getTeamsCount() {
         return (int) selections.values().stream().distinct().count();
     }
 
-    public int getMembersCount(){
+    public int getMembersCount() {
         return selections.size();
     }
 
-    int getPlayersCount(ITeam team){
+    int getPlayersCount(ITeam team) {
         return (int) selections.values().stream().filter(team2 -> team2.equals(team)).count();
     }
 

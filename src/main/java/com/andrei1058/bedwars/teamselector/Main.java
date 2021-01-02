@@ -22,6 +22,16 @@ public class Main extends JavaPlugin {
     public static BedWars bw;
     public static Main plugin;
 
+    /**
+     * Register listeners
+     */
+    private static void registerListeners(Listener... listeners) {
+        PluginManager pm = Bukkit.getPluginManager();
+        for (Listener l : listeners) {
+            pm.registerEvents(l, plugin);
+        }
+    }
+
     @Override
     public void onEnable() {
         plugin = this;
@@ -35,7 +45,7 @@ public class Main extends JavaPlugin {
 
         bw = Bukkit.getServicesManager().getRegistration(BedWars.class).getProvider();
 
-        if (bw == null){
+        if (bw == null) {
             getLogger().severe("Can't hook into BedWars1058.");
             Bukkit.getPluginManager().disablePlugin(plugin);
             return;
@@ -62,15 +72,5 @@ public class Main extends JavaPlugin {
         metrics.addCustomChart(new Metrics.SimplePie("balance_teams", () -> String.valueOf(Config.config.getBoolean(Config.BALANCE_TEAMS))));
 
         new SpigotUpdater(this, 60438, true).checkUpdate();
-    }
-
-    /**
-     * Register listeners
-     */
-    private static void registerListeners(Listener... listeners) {
-        PluginManager pm = Bukkit.getPluginManager();
-        for (Listener l : listeners) {
-            pm.registerEvents(l, plugin);
-        }
     }
 }

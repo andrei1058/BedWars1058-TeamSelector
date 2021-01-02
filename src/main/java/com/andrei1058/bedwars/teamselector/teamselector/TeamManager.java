@@ -18,6 +18,13 @@ public class TeamManager {
 
     }
 
+    public static TeamManager getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new TeamManager();
+        }
+        return INSTANCE;
+    }
+
     /**
      * Clear team preferences for an arena.
      */
@@ -43,13 +50,6 @@ public class TeamManager {
         return null;
     }
 
-    public static TeamManager getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new TeamManager();
-        }
-        return INSTANCE;
-    }
-
     public int getPlayersCount(ITeam team, IArena arena) {
         ArenaPreferences preferences = getArena(arena);
         if (preferences != null) {
@@ -66,7 +66,7 @@ public class TeamManager {
         return new ArrayList<>();
     }
 
-    public void setPlayerTeam(Player player, IArena arena, ITeam team){
+    public void setPlayerTeam(Player player, IArena arena, ITeam team) {
         ArenaPreferences preferences = getArena(arena);
         if (preferences != null) {
             preferences.setPlayerTeam(player, team);

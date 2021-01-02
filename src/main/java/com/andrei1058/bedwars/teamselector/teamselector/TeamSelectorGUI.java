@@ -3,7 +3,6 @@ package com.andrei1058.bedwars.teamselector.teamselector;
 import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.arena.team.ITeam;
-import com.andrei1058.bedwars.api.arena.team.TeamColor;
 import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.teamselector.Main;
 import com.andrei1058.bedwars.teamselector.api.events.TeamSelectorChooseEvent;
@@ -24,12 +23,11 @@ import java.util.UUID;
 
 public class TeamSelectorGUI {
 
-    //Players with Team Selector GUI opened
-    public static ArrayList<UUID> openGUIs = new ArrayList<>();
-
     //Gui opener identifier
     public static final String TEAM_SELECTOR_IDENTIFIER = "BWTEAMSELECTOR";
     public static final String TEAM_JOIN_IDENTIFIER = "BWJOIN_";
+    //Players with Team Selector GUI opened
+    public static ArrayList<UUID> openGUIs = new ArrayList<>();
 
     public static void openGUI(Player player, boolean update) {
         //Check if arena isn't started yet
@@ -134,7 +132,7 @@ public class TeamSelectorGUI {
                 if (s.contains("{members}")) {
                     s = s.replace("{members}", "");
                     String color = ChatColor.getLastColors(s);
-                    List<Player> members =  TeamManager.getInstance().getMembers(bwt, arena);
+                    List<Player> members = TeamManager.getInstance().getMembers(bwt, arena);
                     // prevent ugly space in lore
                     if (members.isEmpty()) continue;
                     for (Player p : TeamManager.getInstance().getMembers(bwt, arena)) {
@@ -183,11 +181,13 @@ public class TeamSelectorGUI {
         if (bwt == null) return false;
         ITeam playerSelection = TeamManager.getInstance().getPlayerTeam(player, arena);
 
+        //Check if selected team is the same as current team
         if (bwt.equals(playerSelection)) {
             player.sendMessage(Language.getMsg(player, Messages.ALREADY_IN_TEAM));
             return false;
         }
 
+        //Check if the player is in a party
         if (Main.bw.getPartyUtil().hasParty(player)) {
             player.sendMessage(Language.getMsg(player, Messages.PARTY_DENIED));
             return false;

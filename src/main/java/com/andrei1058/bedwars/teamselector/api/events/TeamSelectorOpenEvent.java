@@ -8,7 +8,7 @@ public class TeamSelectorOpenEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
-    private Player player;
+    private final Player player;
     private boolean cancelled = false;
 
     /**
@@ -16,6 +16,10 @@ public class TeamSelectorOpenEvent extends Event {
      */
     public TeamSelectorOpenEvent(Player p) {
         this.player = p;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     /**
@@ -27,10 +31,6 @@ public class TeamSelectorOpenEvent extends Event {
         return player;
     }
 
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
-    }
-
     /**
      * Check if cancelled
      *
@@ -40,11 +40,11 @@ public class TeamSelectorOpenEvent extends Event {
         return cancelled;
     }
 
-    public HandlerList getHandlers() {
-        return HANDLERS;
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
-    public static HandlerList getHandlerList() {
+    public HandlerList getHandlers() {
         return HANDLERS;
     }
 }

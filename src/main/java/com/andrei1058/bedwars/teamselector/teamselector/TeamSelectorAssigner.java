@@ -24,10 +24,10 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         LinkedList<ITeam> selectedTeams = preferences.getSelections().values().stream().distinct().collect(Collectors.toCollection(LinkedList::new));
 
         // prioritize players who filled a team by team-selector
-        for (ITeam team : new ArrayList<>(selectedTeams)){
+        for (ITeam team : new ArrayList<>(selectedTeams)) {
             List<Player> selectors = preferences.getMembers(team);
-            if (selectors.size() == arena.getMaxInTeam()){
-                for (Player selector : selectors){
+            if (selectors.size() == arena.getMaxInTeam()) {
+                for (Player selector : selectors) {
                     TeamAssignEvent e = new TeamAssignEvent(selector, team, arena);
                     Bukkit.getPluginManager().callEvent(e);
                     if (!e.isCancelled()) {
@@ -45,8 +45,8 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         // order teams by less selected
         LinkedList<ITeam> lessSelectedTeams = new LinkedList<>();
         // cache unselected teams first
-        for (ITeam team : arena.getTeams()){
-            if (!selectedTeams.contains(team)){
+        for (ITeam team : arena.getTeams()) {
+            if (!selectedTeams.contains(team)) {
                 lessSelectedTeams.add(team);
             }
         }
@@ -57,18 +57,18 @@ public class TeamSelectorAssigner implements ITeamAssigner {
 
         // list what members need to be added
         List<List<Player>> parties = new ArrayList<>();
-        for (Player inGame : arena.getPlayers()){
-            if (Main.bw.getPartyUtil().isOwner(inGame)){
+        for (Player inGame : arena.getPlayers()) {
+            if (Main.bw.getPartyUtil().isOwner(inGame)) {
                 List<Player> partyMembers = Main.bw.getPartyUtil().getMembers(inGame);
-                if (!partyMembers.isEmpty()){
+                if (!partyMembers.isEmpty()) {
                     List<Player> filteredMembers = new ArrayList<>();
-                    for (Player member : partyMembers){
+                    for (Player member : partyMembers) {
                         // check if party member is in this arena
-                        if (arena.isPlayer(member)){
+                        if (arena.isPlayer(member)) {
                             filteredMembers.add(member);
                         }
                     }
-                    if (!filteredMembers.isEmpty()){
+                    if (!filteredMembers.isEmpty()) {
                         parties.add(filteredMembers);
                     }
                 }
@@ -76,10 +76,10 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         }
 
         // team-up parties - make full teams first
-        for (List<Player> party : parties){
-            if (party.size() >= arena.getMaxInTeam() && lessSelectedTeams.get(0).getMembers().isEmpty()){
+        for (List<Player> party : parties) {
+            if (party.size() >= arena.getMaxInTeam() && lessSelectedTeams.get(0).getMembers().isEmpty()) {
                 ITeam team = lessSelectedTeams.get(0);
-                for (int i = 0; i < party.size() || team.getMembers().size() < arena.getMaxInTeam(); i++){
+                for (int i = 0; i < party.size() || team.getMembers().size() < arena.getMaxInTeam(); i++) {
                     Player member = party.remove(0);
                     TeamAssignEvent e = new TeamAssignEvent(member, team, arena);
                     Bukkit.getPluginManager().callEvent(e);
@@ -99,13 +99,13 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         parties.sort(Comparator.comparingInt(List::size));
 
         // team up remaining players from parties
-        for (List<Player> party : parties){
+        for (List<Player> party : parties) {
             // if remained one player treat like a regular player
             if (party.size() > 1) {
                 // check if the player amount who booked that team is greater and BREAK
                 ITeam team = lessSelectedTeams.get(0);
-                if (preferences.getMembers(team).size() < party.size()){
-                    for (int i = 0; i < party.size() || team.getMembers().size() < arena.getMaxInTeam(); i++){
+                if (preferences.getMembers(team).size() < party.size()) {
+                    for (int i = 0; i < party.size() || team.getMembers().size() < arena.getMaxInTeam(); i++) {
                         Player member = party.remove(0);
                         TeamAssignEvent e = new TeamAssignEvent(member, team, arena);
                         Bukkit.getPluginManager().callEvent(e);
@@ -126,9 +126,9 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         }
 
         // give team preferences if possible
-        for (Map.Entry<Player, ITeam> entry : preferences.getSelections().entrySet()){
-            if (!skipped.contains(entry.getKey().getUniqueId())){
-                if (entry.getValue().getMembers().size() < arena.getMaxInTeam()){
+        for (Map.Entry<Player, ITeam> entry : preferences.getSelections().entrySet()) {
+            if (!skipped.contains(entry.getKey().getUniqueId())) {
+                if (entry.getValue().getMembers().size() < arena.getMaxInTeam()) {
                     TeamAssignEvent e = new TeamAssignEvent(entry.getKey(), entry.getValue(), arena);
                     Bukkit.getPluginManager().callEvent(e);
                     if (!e.isCancelled()) {
@@ -141,10 +141,10 @@ public class TeamSelectorAssigner implements ITeamAssigner {
 
         // assign remaining players a team
         // I guess this part should implement balance-teams
-        for (Player player : arena.getPlayers()){
-            if (!skipped.contains(player.getUniqueId())){
-                for (ITeam team : lessSelectedTeams){
-                    if (team.getMembers().size() < arena.getMaxInTeam()){
+        for (Player player : arena.getPlayers()) {
+            if (!skipped.contains(player.getUniqueId())) {
+                for (ITeam team : lessSelectedTeams) {
+                    if (team.getMembers().size() < arena.getMaxInTeam()) {
                         TeamAssignEvent e = new TeamAssignEvent(player, team, arena);
                         Bukkit.getPluginManager().callEvent(e);
                         if (!e.isCancelled()) {

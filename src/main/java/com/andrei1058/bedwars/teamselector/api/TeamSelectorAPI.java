@@ -11,6 +11,8 @@ public interface TeamSelectorAPI {
     ITeam getSelectedTeam(Player player);
 
 
-    /** Get api version*/
+    /**
+     * Get api version
+     */
     int getApiVersion();
 }

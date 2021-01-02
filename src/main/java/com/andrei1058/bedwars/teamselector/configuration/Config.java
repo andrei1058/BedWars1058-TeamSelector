@@ -11,6 +11,19 @@ import java.util.logging.Level;
 
 public class Config {
 
+    private Config(){
+        //Private constructor to prevent class instantiation
+    }
+
+    public static final String SELECTOR_ITEM_STACK_MATERIAL = "team-selector-item-stack";
+    public static final String SELECTOR_SLOT = "team-selector-slot";
+    public static final String GIVE_SELECTOR_SELECTED_TEAM_COLOR = "give-team-color";
+    public static final String ALLOW_TEAM_CHANGE = "allow-team-change";
+    public static final String ALLOW_MOVE_TROUGH_INVENTORY = "allow-move-in-inventory";
+    public static final String BALANCE_TEAMS = "balance-teams";
+    public static final String GUI_OPEN_SOUND = "gui-open-sound";
+    public static final String SUCCESS_SOUND = "success-sound";
+    public static final String ERROR_SOUND = "error-sound";
     public static ConfigManager config;
 
     /**
@@ -48,16 +61,6 @@ public class Config {
         yml.options().copyDefaults(true);
         config.save();
     }
-
-    public static final String SELECTOR_ITEM_STACK_MATERIAL = "team-selector-item-stack";
-    public static final String SELECTOR_SLOT = "team-selector-slot";
-    public static final String GIVE_SELECTOR_SELECTED_TEAM_COLOR = "give-team-color";
-    public static final String ALLOW_TEAM_CHANGE = "allow-team-change";
-    public static final String ALLOW_MOVE_TROUGH_INVENTORY = "allow-move-in-inventory";
-    public static final String BALANCE_TEAMS = "balance-teams";
-    public static final String GUI_OPEN_SOUND = "gui-open-sound";
-    public static final String SUCCESS_SOUND = "success-sound";
-    public static final String ERROR_SOUND = "error-sound";
 
     /**
      * Play sound

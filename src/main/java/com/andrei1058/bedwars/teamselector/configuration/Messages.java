@@ -7,6 +7,21 @@ import java.util.Collections;
 
 public class Messages {
 
+    @SuppressWarnings("WeakerAccess")
+    public static final String PATH = "addons.team-selector.";
+    public static final String GUI_NAME = PATH + "inventory-name";
+    public static final String SELECTOR_NAME = PATH + "selector-name";
+    public static final String SELECTOR_LORE = PATH + "selector-lore";
+    public static final String CHOICE_NAME = PATH + "choice.name";
+    public static final String CHOICE_LORE = PATH + "choice.lore";
+    public static final String SWITCH_DISABLED = PATH + "switch-disabled";
+    public static final String TEAM_JOIN = PATH + "team-join";
+    public static final String TEAM_FULL = PATH + "team-full";
+    public static final String TEAM_NOT_BALANCED = PATH + "teams-not-balanced";
+    public static final String PARTY_DENIED = PATH + "party-deny";
+    public static final String CANT_JOIN_WHILE_STARTING = PATH + "cant-join-while-starting";
+    public static final String ALREADY_IN_TEAM = PATH + "already-in-team";
+
     /**
      * Setup Default Messages
      */
@@ -27,24 +42,9 @@ public class Messages {
         }
     }
 
-    private static void addDefault(Language l, String path, Object english, Object romanian){
-        if (!l.exists(path)){
+    private static void addDefault(Language l, String path, Object english, Object romanian) {
+        if (!l.exists(path)) {
             l.set(path, l.getIso().equals("ro") ? romanian : english);
         }
     }
-
-    @SuppressWarnings("WeakerAccess")
-    public static final String PATH = "addons.team-selector.";
-    public static final String GUI_NAME = PATH + "inventory-name";
-    public static final String SELECTOR_NAME = PATH + "selector-name";
-    public static final String SELECTOR_LORE = PATH + "selector-lore";
-    public static final String CHOICE_NAME = PATH + "choice.name";
-    public static final String CHOICE_LORE = PATH + "choice.lore";
-    public static final String SWITCH_DISABLED = PATH + "switch-disabled";
-    public static final String TEAM_JOIN = PATH + "team-join";
-    public static final String TEAM_FULL = PATH + "team-full";
-    public static final String TEAM_NOT_BALANCED = PATH + "teams-not-balanced";
-    public static final String PARTY_DENIED = PATH + "party-deny";
-    public static final String CANT_JOIN_WHILE_STARTING = PATH + "cant-join-while-starting";
-    public static final String ALREADY_IN_TEAM = PATH + "already-in-team";
 }
