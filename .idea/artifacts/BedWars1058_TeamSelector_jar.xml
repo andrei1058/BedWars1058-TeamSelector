@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="BedWars1058-TeamSelector:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/BedWars1058_TeamSelector_jar</output-path>
-    <root id="archive" name="BedWars1058-TeamSelector.jar">
-      <element id="module-output" name="BedWars1058-TeamSelector" />
-    </root>
-  </artifact>
-</component>
