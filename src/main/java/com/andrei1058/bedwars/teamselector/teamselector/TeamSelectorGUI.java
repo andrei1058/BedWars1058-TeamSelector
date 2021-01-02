@@ -182,7 +182,11 @@ public class TeamSelectorGUI {
         ITeam bwt = arena.getTeam(teamName);
         if (bwt == null) return false;
         ITeam playerSelection = TeamManager.getInstance().getPlayerTeam(player, arena);
-        if (bwt.equals(playerSelection)) return false;
+
+        if (bwt.equals(playerSelection)) {
+            player.sendMessage(Language.getMsg(player, Messages.ALREADY_IN_TEAM));
+            return false;
+        }
 
         if (Main.bw.getPartyUtil().hasParty(player)) {
             player.sendMessage(Language.getMsg(player, Messages.PARTY_DENIED));
