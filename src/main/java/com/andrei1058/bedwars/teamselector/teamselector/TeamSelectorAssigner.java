@@ -55,9 +55,18 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         // keep teams in a single place ordered by less used first
         lessSelectedTeams.addAll(selectedTeams);
 
+
+        // add here filtered members because #isOwner in some cases will return
+        // true if the given user can chose arenas so it may create duplications if there
+        // are more users with chose arena permission
+        List<UUID> preventDuplication = new ArrayList<>();
+
         // list what members need to be added
         List<List<Player>> parties = new ArrayList<>();
         for (Player inGame : arena.getPlayers()) {
+            if (preventDuplication.contains(inGame.getUniqueId())) {
+                continue;
+            }
             if (Main.bw.getPartyUtil().isOwner(inGame)) {
                 List<Player> partyMembers = Main.bw.getPartyUtil().getMembers(inGame);
                 if (!partyMembers.isEmpty()) {
@@ -66,9 +75,16 @@ public class TeamSelectorAssigner implements ITeamAssigner {
                         // check if party member is in this arena
                         if (arena.isPlayer(member)) {
                             filteredMembers.add(member);
+                            preventDuplication.add(member.getUniqueId());
                         }
                     }
                     if (!filteredMembers.isEmpty()) {
+                        // add the possible party owner to the list
+                        // because some party adapters may not include the owner in the members list
+                        if (!filteredMembers.contains(inGame)) {
+                            filteredMembers.add(inGame);
+                            preventDuplication.add(inGame.getUniqueId());
+                        }
                         parties.add(filteredMembers);
                     }
                 }
@@ -89,7 +105,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
                     }
                 }
                 // check if team is still full because team assign event can be cancelled
-                if (team.getMembers().size() == arena.getMaxInTeam()) {
+                if (team.getMembers().size() >= arena.getMaxInTeam()) {
                     lessSelectedTeams.remove(team);
                 }
             }
@@ -115,7 +131,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
                         }
                     }
                     // check if team is still full because team assign event can be cancelled
-                    if (team.getMembers().size() == arena.getMaxInTeam()) {
+                    if (team.getMembers().size() >= arena.getMaxInTeam()) {
                         lessSelectedTeams.remove(team);
                     }
                 } else {
@@ -142,7 +158,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         // assign remaining players a team
         // I guess this part should implement balance-teams
         for (Player player : arena.getPlayers()) {
-            if (!skipped.contains(player.getUniqueId())) {
+            if (!skipped.contains(player.getUniqueId()) && arena.getTeam(player) == null) {
                 for (ITeam team : lessSelectedTeams) {
                     if (team.getMembers().size() < arena.getMaxInTeam()) {
                         TeamAssignEvent e = new TeamAssignEvent(player, team, arena);
