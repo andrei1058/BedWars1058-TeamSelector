@@ -6,6 +6,7 @@ import com.andrei1058.bedwars.api.arena.team.ITeamAssigner;
 import com.andrei1058.bedwars.api.events.gameplay.TeamAssignEvent;
 import com.andrei1058.bedwars.teamselector.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -95,7 +96,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         for (List<Player> party : parties) {
             if (party.size() >= arena.getMaxInTeam() && lessSelectedTeams.get(0).getMembers().isEmpty()) {
                 ITeam team = lessSelectedTeams.get(0);
-                for (int i = 0; i < party.size() || team.getMembers().size() < arena.getMaxInTeam(); i++) {
+                for (int i = 0; i < party.size() && team.getMembers().size() < arena.getMaxInTeam(); i++) {
                     Player member = party.remove(0);
                     TeamAssignEvent e = new TeamAssignEvent(member, team, arena);
                     Bukkit.getPluginManager().callEvent(e);
@@ -112,16 +113,19 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         }
 
         // sort parties by bigger first
-        parties.sort(Comparator.comparingInt(List::size));
 
         // team up remaining players from parties
-        for (List<Player> party : parties) {
+        parties.sort(Comparator.comparingInt(List::size));
+        while (parties.size() > 0 && parties.get(0).size() > 1) {
+            parties.sort(Comparator.comparingInt(List::size));
+            List<Player> party = parties.get(0);
             // if remained one player treat like a regular player
             if (party.size() > 1) {
                 // check if the player amount who booked that team is greater and BREAK
                 ITeam team = lessSelectedTeams.get(0);
+                // if players who selected that team are more than the remaining party size
                 if (preferences.getMembers(team).size() < party.size()) {
-                    for (int i = 0; i < party.size() || team.getMembers().size() < arena.getMaxInTeam(); i++) {
+                    for (int i = 0; i < party.size() && team.getMembers().size() < arena.getMaxInTeam(); i++) {
                         Player member = party.remove(0);
                         TeamAssignEvent e = new TeamAssignEvent(member, team, arena);
                         Bukkit.getPluginManager().callEvent(e);
