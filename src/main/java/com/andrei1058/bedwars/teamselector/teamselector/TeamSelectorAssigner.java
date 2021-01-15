@@ -6,7 +6,6 @@ import com.andrei1058.bedwars.api.arena.team.ITeamAssigner;
 import com.andrei1058.bedwars.api.events.gameplay.TeamAssignEvent;
 import com.andrei1058.bedwars.teamselector.Main;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -47,7 +46,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         LinkedList<ITeam> lessSelectedTeams = new LinkedList<>();
         // cache unselected teams first
         for (ITeam team : arena.getTeams()) {
-            if (!selectedTeams.contains(team)) {
+            if (team.getMembers().size() < arena.getMaxInTeam() && !selectedTeams.contains(team)) {
                 lessSelectedTeams.add(team);
             }
         }
@@ -162,8 +161,8 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         // assign remaining players a team
         // I guess this part should implement balance-teams
         for (Player player : arena.getPlayers()) {
-            if (!skipped.contains(player.getUniqueId()) && arena.getTeam(player) == null) {
-                for (ITeam team : lessSelectedTeams) {
+            if (!skipped.contains(player.getUniqueId())) {
+                for (ITeam team : arena.getTeams()) {
                     if (team.getMembers().size() < arena.getMaxInTeam()) {
                         TeamAssignEvent e = new TeamAssignEvent(player, team, arena);
                         Bukkit.getPluginManager().callEvent(e);
