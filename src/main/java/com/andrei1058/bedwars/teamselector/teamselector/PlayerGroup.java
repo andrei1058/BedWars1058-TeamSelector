@@ -2,9 +2,9 @@ package com.andrei1058.bedwars.teamselector.teamselector;
 
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.arena.team.ITeam;
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -41,7 +41,7 @@ public class PlayerGroup implements Comparable<PlayerGroup>{
     }
 
     @Override
-    public int compareTo(PlayerGroup otherGroup) {
+    public int compareTo(@NotNull PlayerGroup otherGroup) {
 
         // if is a party
         if (getPreference() == null){
