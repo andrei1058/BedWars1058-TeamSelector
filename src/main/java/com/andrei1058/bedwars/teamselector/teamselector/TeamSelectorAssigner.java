@@ -13,166 +13,141 @@ import java.util.stream.Collectors;
 
 public class TeamSelectorAssigner implements ITeamAssigner {
 
-    private static final List<UUID> skipped = new ArrayList<>();
+    private final LinkedList<PlayerGroup> playerGroups = new LinkedList<>();
+    private final List<UUID> skippedFromPartyCheck = new ArrayList<>();
+    private final List<UUID> playersAddedToATeam = new ArrayList<>();
+    private final LinkedList<ITeam> teams = new LinkedList<>();
 
     @Override
     public void assignTeams(IArena arena) {
+        teams.addAll(arena.getTeams());
 
-        ArenaPreferences preferences = TeamManager.getInstance().getArena(arena);
-
-        // list of selected teams used later to filter unselected teams
-        LinkedList<ITeam> selectedTeams = preferences.getSelections().values().stream().distinct().collect(Collectors.toCollection(LinkedList::new));
-
-        // prioritize players who filled a team by team-selector
-        for (ITeam team : new ArrayList<>(selectedTeams)) {
-            List<Player> selectors = preferences.getMembers(team);
-            if (selectors.size() == arena.getMaxInTeam()) {
-                for (Player selector : selectors) {
-                    TeamAssignEvent e = new TeamAssignEvent(selector, team, arena);
-                    Bukkit.getPluginManager().callEvent(e);
-                    if (!e.isCancelled()) {
-                        team.addPlayers(selector);
-                        skipped.add(selector.getUniqueId());
-                    }
-                }
-                // check if team is still full because team assign event can be cancelled
-                if (team.getMembers().size() == arena.getMaxInTeam()) {
-                    selectedTeams.remove(team);
-                }
-            }
-        }
-
-        // order teams by less selected
-        LinkedList<ITeam> lessSelectedTeams = new LinkedList<>();
-        // cache unselected teams first
-        for (ITeam team : arena.getTeams()) {
-            if (team.getMembers().size() < arena.getMaxInTeam() && !selectedTeams.contains(team)) {
-                lessSelectedTeams.add(team);
-            }
-        }
-        // less selected first
-        selectedTeams.sort(Comparator.comparingInt(o -> preferences.getMembers(o).size()));
-        // keep teams in a single place ordered by less used first
-        lessSelectedTeams.addAll(selectedTeams);
-
-
-        // add here filtered members because #isOwner in some cases will return
-        // true if the given user can chose arenas so it may create duplications if there
-        // are more users with chose arena permission
-        List<UUID> preventDuplication = new ArrayList<>();
-
-        // list what members need to be added
-        List<List<Player>> parties = new ArrayList<>();
-        for (Player inGame : arena.getPlayers()) {
-            if (preventDuplication.contains(inGame.getUniqueId())) {
-                continue;
-            }
-            if (Main.bw.getPartyUtil().isOwner(inGame)) {
-                List<Player> partyMembers = Main.bw.getPartyUtil().getMembers(inGame);
-                if (!partyMembers.isEmpty()) {
-                    List<Player> filteredMembers = new ArrayList<>();
-                    for (Player member : partyMembers) {
-                        // check if party member is in this arena
-                        if (arena.isPlayer(member)) {
-                            filteredMembers.add(member);
-                            preventDuplication.add(member.getUniqueId());
-                        }
-                    }
-                    if (!filteredMembers.isEmpty()) {
-                        // add the possible party owner to the list
-                        // because some party adapters may not include the owner in the members list
-                        if (!filteredMembers.contains(inGame)) {
-                            filteredMembers.add(inGame);
-                            preventDuplication.add(inGame.getUniqueId());
-                        }
-                        parties.add(filteredMembers);
-                    }
-                }
-            }
-        }
-
-        // team-up parties - make full teams first
-        for (List<Player> party : parties) {
-            if (party.size() >= arena.getMaxInTeam() && lessSelectedTeams.get(0).getMembers().isEmpty()) {
-                ITeam team = lessSelectedTeams.get(0);
-                for (int i = 0; i < party.size() && team.getMembers().size() < arena.getMaxInTeam(); i++) {
-                    Player member = party.remove(0);
-                    TeamAssignEvent e = new TeamAssignEvent(member, team, arena);
-                    Bukkit.getPluginManager().callEvent(e);
-                    if (!e.isCancelled()) {
-                        team.addPlayers(member);
-                        skipped.add(member.getUniqueId());
-                    }
-                }
-                // check if team is still full because team assign event can be cancelled
-                if (team.getMembers().size() >= arena.getMaxInTeam()) {
-                    lessSelectedTeams.remove(team);
-                }
-            }
-        }
-
-        // sort parties by bigger first
-
-        // team up remaining players from parties
-        parties.sort(Comparator.comparingInt(List::size));
-        while (parties.size() > 0 && parties.get(0).size() > 1) {
-            parties.sort(Comparator.comparingInt(List::size));
-            List<Player> party = parties.get(0);
-            // if remained one player treat like a regular player
-            if (party.size() > 1) {
-                // check if the player amount who booked that team is greater and BREAK
-                ITeam team = lessSelectedTeams.get(0);
-                // if players who selected that team are more than the remaining party size
-                if (preferences.getMembers(team).size() < party.size()) {
-                    for (int i = 0; i < party.size() && team.getMembers().size() < arena.getMaxInTeam(); i++) {
-                        Player member = party.remove(0);
-                        TeamAssignEvent e = new TeamAssignEvent(member, team, arena);
-                        Bukkit.getPluginManager().callEvent(e);
-                        if (!e.isCancelled()) {
-                            team.addPlayers(member);
-                            skipped.add(member.getUniqueId());
-                        }
-                    }
-                    // check if team is still full because team assign event can be cancelled
-                    if (team.getMembers().size() >= arena.getMaxInTeam()) {
-                        lessSelectedTeams.remove(team);
-                    }
-                } else {
-                    // no more attempts required because parties are ordered and teams list as well
-                    break;
-                }
-            }
-        }
-
-        // give team preferences if possible
-        for (Map.Entry<Player, ITeam> entry : preferences.getSelections().entrySet()) {
-            if (!skipped.contains(entry.getKey().getUniqueId())) {
-                if (entry.getValue().getMembers().size() < arena.getMaxInTeam()) {
-                    TeamAssignEvent e = new TeamAssignEvent(entry.getKey(), entry.getValue(), arena);
-                    Bukkit.getPluginManager().callEvent(e);
-                    if (!e.isCancelled()) {
-                        entry.getValue().addPlayers(entry.getKey());
-                        skipped.add(entry.getKey().getUniqueId());
-                    }
-                }
-            }
-        }
-
-        // assign remaining players a team
-        // I guess this part should implement balance-teams
+        // create groups from parties
         for (Player player : arena.getPlayers()) {
-            if (!skipped.contains(player.getUniqueId())) {
-                for (ITeam team : arena.getTeams()) {
-                    if (team.getMembers().size() < arena.getMaxInTeam()) {
-                        TeamAssignEvent e = new TeamAssignEvent(player, team, arena);
-                        Bukkit.getPluginManager().callEvent(e);
-                        if (!e.isCancelled()) {
-                            team.addPlayers(player);
-                        }
+            // check if is party owner or someone with a big rank to identify a party
+            if (!skippedFromPartyCheck.contains(player.getUniqueId()) && Main.bw.getPartyUtil().isOwner(player)) {
+                // all party members will be added to a skip list in case there are more members with
+                // a rank that allow them to join games.
+                // To be more explicit #isOwner may return true for more than a player.
+                Queue<Player> partyMembers = new LinkedList<>();
+                for (Player inParty : Main.bw.getPartyUtil().getMembers(player)) {
+                    // if partied player is not engaged in another game or in lobby
+                    if (arena.isPlayer(inParty)) {
+                        partyMembers.add(inParty);
+                        skippedFromPartyCheck.add(inParty.getUniqueId());
+                    }
+                }
+                // some parties do not include the party owner in the members list
+                // so we check if he was included
+                if (!partyMembers.contains(player)) {
+                    partyMembers.add(player);
+                    skippedFromPartyCheck.add(player.getUniqueId());
+                }
+
+                // if is alone skip step
+                if (partyMembers.size() < 2) continue;
+
+                // cache parties in new groups of players and split parties bigger than max in team
+                PlayerGroup playerGroup = null;
+                do {
+                    // on first occurrence or if the group is filled
+                    if (playerGroup == null || playerGroup.getMembers().size() == arena.getMaxInTeam()) {
+                        playerGroup = new PlayerGroup(arena, null);
+                        playerGroups.add(playerGroup);
+                    }
+                    // current player
+                    Player toBeAdded = partyMembers.peek();
+                    playerGroup.addPlayer(toBeAdded);
+                } while (!partyMembers.isEmpty());
+            }
+        }
+
+        // create groups from registered preferences
+        ArenaPreferences registeredPreference = TeamManager.getInstance().getArena(arena);
+        for (ITeam preference : registeredPreference.getSelections().values().stream().distinct().collect(Collectors.toList())) {
+            PlayerGroup playerGroup = new PlayerGroup(arena, preference);
+            for (Player teamSelector : registeredPreference.getMembers(preference)) {
+                // players amount in that case cannot be bigger than max in team so we don't have to split anything
+                playerGroup.addPlayer(teamSelector);
+            }
+        }
+
+        // order player groups
+        Collections.sort(playerGroups);
+
+        // order final teams by less selected to synchronize with PlayerGroup comparator
+        if (!registeredPreference.getSelections().isEmpty()) {
+            teams.sort(Comparator.comparingInt(o -> registeredPreference.getMembers(o).size()));
+        }
+
+        // assign groups to teams
+        for (PlayerGroup playerGroup : playerGroups) {
+            if (playerGroup.getMembers().isEmpty()) continue;
+            if (playerGroup.getPreference() == null) {
+                ITeam targetTeam = null;
+                for (ITeam team : teams) {
+                    if (arena.getMaxInTeam() - team.getMembers().size() < playerGroup.getMembers().size()) {
+                        targetTeam = team;
                         break;
                     }
                 }
+                if (targetTeam != null) {
+                    for (Player player : playerGroup.getMembers()) {
+                        targetTeam.addPlayers(player);
+                        TeamAssignEvent teamAssignEvent = new TeamAssignEvent(player, targetTeam, arena);
+                        Bukkit.getPluginManager().callEvent(teamAssignEvent);
+                        playersAddedToATeam.add(player.getUniqueId());
+                        debug(player, "Added to team: " + targetTeam.getName() + " on " + arena.getWorldName());
+                    }
+                    // if team is filled
+                    // make team unavailable
+                    if (targetTeam.getMembers().size() == arena.getMaxInTeam()) {
+                        teams.remove(targetTeam);
+                    }
+                }
+            } else {
+                // priority on preferences that can fill an entire team.
+                // same code is used on low priority and we check if there is still space on a possible compromised preference
+                // assign players to target team
+                for (Player player : playerGroup.getMembers()) {
+                    if (playerGroup.getMembers().size() < arena.getMaxInTeam()) {
+                        playerGroup.getPreference().addPlayers(player);
+                        TeamAssignEvent teamAssignEvent = new TeamAssignEvent(player, playerGroup.getPreference(), arena);
+                        Bukkit.getPluginManager().callEvent(teamAssignEvent);
+                        playersAddedToATeam.add(player.getUniqueId());
+                        debug(player, "Added to team: " + playerGroup.getPreference().getName() + " on " + arena.getWorldName());
+                    }
+                }
+                // make team unavailable
+                if (playerGroup.getPreference().getMembers().size() == arena.getMaxInTeam()) {
+                    teams.remove(playerGroup.getPreference());
+                }
             }
         }
+
+        // assign remaining players to a team
+        for (Player player : arena.getPlayers()) {
+            if (!playersAddedToATeam.contains(player.getUniqueId())) {
+                for (ITeam team : teams) {
+                    if (team.getMembers().size() < arena.getMaxInTeam()) {
+                        team.addPlayers(player);
+                        debug(player, "Added to team: " + team.getName() + " on " + arena.getWorldName());
+                        break;
+                    }
+                }
+                // if he hasn't been added to a team kick
+                debug(player, "That was unexpected: you haven't been assigned to a team!");
+                player.kickPlayer("That was unexpected: you haven't been assigned to a team!");
+            }
+        }
+
+        playerGroups.clear();
+        skippedFromPartyCheck.clear();
+        playersAddedToATeam.clear();
+        teams.clear();
+    }
+
+    private void debug(Player player, String message) {
+        Main.plugin.getLogger().warning("NTS-DEBUG: " + message + " - " + player.getName() + ".");
     }
 }

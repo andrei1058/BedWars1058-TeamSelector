@@ -5,3 +5,5 @@ target
 /*/.iml
 /target
 /out
+/pom.xml.versionsBackup
+/dependency-reduced-pom.xml
