@@ -19,6 +19,7 @@ public class PlayerGroup implements Comparable<PlayerGroup>{
     public PlayerGroup(IArena arena, ITeam team) {
         this.arena = arena;
         this.preference = team;
+        TeamSelectorAssigner.debug(null, "Creating group for team: " + (team == null ? "null" : team.getName()));
     }
 
     /**
@@ -27,6 +28,7 @@ public class PlayerGroup implements Comparable<PlayerGroup>{
     public void addPlayer(Player player) {
         if (members.size() == arena.getMaxInTeam()) return;
         members.add(player);
+        TeamSelectorAssigner.debug(player, "Adding to group for team: " + (preference == null ? "null" : preference.getName()));
     }
 
     @NotNull

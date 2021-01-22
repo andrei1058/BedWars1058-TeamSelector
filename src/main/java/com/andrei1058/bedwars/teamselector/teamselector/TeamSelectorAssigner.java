@@ -70,6 +70,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
                 // players amount in that case cannot be bigger than max in team so we don't have to split anything
                 playerGroup.addPlayer(teamSelector);
             }
+            playerGroups.add(playerGroup);
         }
 
         // order player groups
@@ -110,7 +111,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
                 // same code is used on low priority and we check if there is still space on a possible compromised preference
                 // assign players to target team
                 for (Player player : playerGroup.getMembers()) {
-                    if (playerGroup.getMembers().size() < arena.getMaxInTeam()) {
+                    if (playerGroup.getPreference().getMembers().size() < arena.getMaxInTeam()) {
                         playerGroup.getPreference().addPlayers(player);
                         TeamAssignEvent teamAssignEvent = new TeamAssignEvent(player, playerGroup.getPreference(), arena);
                         Bukkit.getPluginManager().callEvent(teamAssignEvent);
@@ -128,16 +129,20 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         // assign remaining players to a team
         for (Player player : arena.getPlayers()) {
             if (!playersAddedToATeam.contains(player.getUniqueId())) {
+                boolean added = false;
                 for (ITeam team : teams) {
                     if (team.getMembers().size() < arena.getMaxInTeam()) {
                         team.addPlayers(player);
                         debug(player, "Added to team: " + team.getName() + " on " + arena.getWorldName());
+                        added = true;
                         break;
                     }
                 }
-                // if he hasn't been added to a team kick
-                debug(player, "That was unexpected: you haven't been assigned to a team!");
-                player.kickPlayer("That was unexpected: you haven't been assigned to a team!");
+                if (!added) {
+                    // if he hasn't been added to a team kick
+                    debug(player, "That was unexpected: you haven't been assigned to a team!");
+                    player.kickPlayer("That was unexpected: you haven't been assigned to a team!");
+                }
             }
         }
 
@@ -147,7 +152,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         teams.clear();
     }
 
-    private void debug(Player player, String message) {
-        Main.plugin.getLogger().warning("NTS-DEBUG: " + message + " - " + player.getName() + ".");
+    public static void debug(Player player, String message) {
+        Main.plugin.getLogger().warning("NTS-DEBUG: " + message + (player == null ? "" : " - " + player.getName() + "."));
     }
 }
