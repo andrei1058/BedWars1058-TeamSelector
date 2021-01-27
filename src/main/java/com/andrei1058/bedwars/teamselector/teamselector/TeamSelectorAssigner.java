@@ -56,7 +56,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
                         playerGroups.add(playerGroup);
                     }
                     // current player
-                    Player toBeAdded = partyMembers.peek();
+                    Player toBeAdded = partyMembers.poll();
                     playerGroup.addPlayer(toBeAdded);
                 } while (!partyMembers.isEmpty());
             }
