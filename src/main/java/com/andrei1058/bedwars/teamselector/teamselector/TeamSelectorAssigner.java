@@ -29,7 +29,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
                 // all party members will be added to a skip list in case there are more members with
                 // a rank that allow them to join games.
                 // To be more explicit #isOwner may return true for more than a player.
-                Queue<Player> partyMembers = new LinkedList<>();
+                Deque<Player> partyMembers = new LinkedList<>();
                 for (Player inParty : Main.bw.getPartyUtil().getMembers(player)) {
                     // if partied player is not engaged in another game or in lobby
                     if (arena.isPlayer(inParty)) {
@@ -47,6 +47,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
                 // if is alone skip step
                 if (partyMembers.size() < 2) continue;
 
+                Main.plugin.getLogger().warning("Handling party size[" + partyMembers.size() + "] - " + partyMembers.toString());
                 // cache parties in new groups of players and split parties bigger than max in team
                 PlayerGroup playerGroup = null;
                 do {
@@ -56,7 +57,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
                         playerGroups.add(playerGroup);
                     }
                     // current player
-                    Player toBeAdded = partyMembers.poll();
+                    Player toBeAdded = partyMembers.pollFirst();
                     playerGroup.addPlayer(toBeAdded);
                 } while (!partyMembers.isEmpty());
             }
