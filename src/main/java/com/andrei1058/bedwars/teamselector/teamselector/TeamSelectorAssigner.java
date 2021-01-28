@@ -87,7 +87,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
             if (playerGroup.getPreference() == null) {
                 ITeam targetTeam = null;
                 for (ITeam team : teams) {
-                    if (arena.getMaxInTeam() - team.getMembers().size() < playerGroup.getMembers().size()) {
+                    if (arena.getMaxInTeam() - team.getMembers().size() >= playerGroup.getMembers().size()) {
                         targetTeam = team;
                         break;
                     }
