@@ -9,7 +9,7 @@ maven-job:
   except:
     - 'master'
   script:
-    - 'mvn versions:set -DnewVersion=0.7-SNAPSHOT'
+    - 'mvn versions:set -DnewVersion=0.7.1-SNAPSHOT'
     - 'mvn versions:update-child-modules'
     - 'mvn -U -DgitVer=git-$CI_COMMIT_SHORT_SHA- clean deploy -s ci_settings.xml'
   artifacts:
@@ -21,7 +21,7 @@ maven-job2:
   only:
     - 'master'
   script:
-    - 'mvn versions:set -DnewVersion=0.7'
+    - 'mvn versions:set -DnewVersion=0.7.1'
     - 'mvn versions:update-child-modules'
     - 'mvn -U -DgitVer=git-$CI_COMMIT_SHORT_SHA- clean deploy -s ci_settings.xml'
   after_script:
