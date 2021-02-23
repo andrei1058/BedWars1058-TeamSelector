@@ -15,7 +15,7 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     //Prevent inventory move
-    public void onInventoryClick(InventoryClickEvent e){
+    public void onInventoryClick(InventoryClickEvent e) {
         ItemStack i = e.getCurrentItem();
         if (i == null) return;
         if (i.getType() == Material.AIR) return;
@@ -23,12 +23,12 @@ public class InventoryListener implements Listener {
         if (!Main.bw.getVersionSupport().isCustomBedWarsItem(i)) return;
         String identifier = Main.bw.getVersionSupport().getCustomData(i);
 
-        if (identifier.equals(TeamSelectorGUI.TEAM_SELECTOR_IDENTIFIER)){
+        if (identifier.equals(TeamSelectorGUI.TEAM_SELECTOR_IDENTIFIER)) {
             e.setCancelled(!Config.config.getBoolean(Config.ALLOW_MOVE_TROUGH_INVENTORY));
-        } else if (identifier.startsWith(TeamSelectorGUI.TEAM_JOIN_IDENTIFIER)){
+        } else if (identifier.startsWith(TeamSelectorGUI.TEAM_JOIN_IDENTIFIER)) {
             String[] s = identifier.split("_");
-            if (s.length == 2){
-                if (TeamSelectorGUI.joinTeam((Player) e.getWhoClicked(), s[1])){
+            if (s.length == 2) {
+                if (TeamSelectorGUI.joinTeam((Player) e.getWhoClicked(), s[1])) {
                     Config.playSound((Player) e.getWhoClicked(), Config.SUCCESS_SOUND);
                 } else {
                     Config.playSound((Player) e.getWhoClicked(), Config.ERROR_SOUND);
@@ -39,7 +39,7 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler
-    public void onInvClose(InventoryCloseEvent e){
+    public void onInvClose(InventoryCloseEvent e) {
         TeamSelectorGUI.openGUIs.remove(e.getPlayer().getUniqueId());
     }
 }

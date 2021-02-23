@@ -1,2 +1,9 @@
 out
 target
+*.iml
+.idea
+/*/.iml
+/target
+/out
+/pom.xml.versionsBackup
+/dependency-reduced-pom.xml

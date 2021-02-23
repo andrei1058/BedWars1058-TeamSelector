@@ -8,7 +8,7 @@ public class TeamSelectorAbortEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
-    private Player player;
+    private final Player player;
 
     /**
      * This is called when a player leaves the arena and his data is removed from team selector
@@ -17,6 +17,10 @@ public class TeamSelectorAbortEvent extends Event {
      */
     public TeamSelectorAbortEvent(Player player) {
         this.player = player;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     /**
@@ -29,10 +33,6 @@ public class TeamSelectorAbortEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

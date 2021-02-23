@@ -11,9 +11,10 @@ public class TeamSelectorChooseEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
 
 
-    private Player player;
-    private IArena arena;
-    private ITeam chosen, oldChoice;
+    private final Player player;
+    private final IArena arena;
+    private final ITeam chosen;
+    private final ITeam oldChoice;
     private boolean cancelled = false;
 
     /**
@@ -24,6 +25,10 @@ public class TeamSelectorChooseEvent extends Event {
         this.arena = arena;
         this.chosen = chosen;
         this.oldChoice = oldChoice;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     /**
@@ -71,10 +76,6 @@ public class TeamSelectorChooseEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

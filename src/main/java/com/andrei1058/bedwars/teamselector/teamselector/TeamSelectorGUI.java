@@ -3,7 +3,6 @@ package com.andrei1058.bedwars.teamselector.teamselector;
 import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.arena.team.ITeam;
-import com.andrei1058.bedwars.api.arena.team.TeamColor;
 import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.teamselector.Main;
 import com.andrei1058.bedwars.teamselector.api.events.TeamSelectorChooseEvent;
@@ -24,12 +23,11 @@ import java.util.UUID;
 
 public class TeamSelectorGUI {
 
-    //Players with Team Selector GUI opened
-    public static ArrayList<UUID> openGUIs = new ArrayList<>();
-
     //Gui opener identifier
     public static final String TEAM_SELECTOR_IDENTIFIER = "BWTEAMSELECTOR";
     public static final String TEAM_JOIN_IDENTIFIER = "BWJOIN_";
+    //Players with Team Selector GUI opened
+    public static ArrayList<UUID> openGUIs = new ArrayList<>();
 
     public static void openGUI(Player player, boolean update) {
         //Check if arena isn't started yet
@@ -120,18 +118,25 @@ public class TeamSelectorGUI {
             i = Main.bw.getVersionSupport().colourItem(i, bwt);
             i = Main.bw.getVersionSupport().addCustomData(i, TEAM_JOIN_IDENTIFIER + bwt.getName());
 
+            String membersCount = String.valueOf(TeamManager.getInstance().getPlayersCount(bwt, arena));
+            String teamName = bwt.getDisplayName(Main.bw.getPlayerLanguage(player));
+
             ItemMeta im = i.getItemMeta();
-            im.setDisplayName(Language.getMsg(player, Messages.CHOICE_NAME).replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName())
-                    .replace("{selected}", String.valueOf(bwt.getMembers().size())).replace("{total}", String.valueOf(arena.getMaxInTeam())));
+            im.setDisplayName(Language.getMsg(player, Messages.CHOICE_NAME).replace("{color}", bwt.getColor().chat().toString()).replace("{team}", teamName)
+                    .replace("{selected}", membersCount).replace("{total}", String.valueOf(arena.getMaxInTeam())));
+
             List<String> lore = new ArrayList<>();
             for (String s : Language.getList(player, Messages.CHOICE_LORE)) {
-                s = s.replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName()).replace("{selected}", String.valueOf(bwt.getMembers().size()))
+                s = s.replace("{color}", bwt.getColor().chat().toString()).replace("{team}", teamName).replace("{selected}", membersCount)
                         .replace("{total}", String.valueOf(arena.getMaxInTeam()));
                 if (s.contains("{members}")) {
                     s = s.replace("{members}", "");
                     String color = ChatColor.getLastColors(s);
-                    for (Player p : bwt.getMembers()) {
-                        lore.add(color + p.getName());
+                    List<Player> members = TeamManager.getInstance().getMembers(bwt, arena);
+                    // prevent ugly space in lore
+                    if (members.isEmpty()) continue;
+                    for (Player p : TeamManager.getInstance().getMembers(bwt, arena)) {
+                        lore.add(color + p.getDisplayName());
                     }
                 } else {
                     lore.add(s);
@@ -169,17 +174,32 @@ public class TeamSelectorGUI {
         if (arena == null) return false;
         if (arena.getStatus() == GameState.playing) return false;
         if (arena.getStatus() == GameState.restarting) return false;
+
+        if (arena.getStatus() == GameState.starting && arena.getStartingTask().getCountdown() < 2) return false;
+
         ITeam bwt = arena.getTeam(teamName);
         if (bwt == null) return false;
+        ITeam playerSelection = TeamManager.getInstance().getPlayerTeam(player, arena);
 
+        //Check if selected team is the same as current team
+        if (bwt.equals(playerSelection)) {
+            player.sendMessage(Language.getMsg(player, Messages.ALREADY_IN_TEAM));
+            return false;
+        }
+
+        //Check if the player is in a party
         if (Main.bw.getPartyUtil().hasParty(player)) {
             player.sendMessage(Language.getMsg(player, Messages.PARTY_DENIED));
             return false;
         }
 
+        String teamDisplayName = bwt.getDisplayName(Main.bw.getPlayerLanguage(player));
+
+        int playersInTeam = TeamManager.getInstance().getPlayersCount(bwt, arena);
+
         //Check if team is full
-        if (bwt.getSize() == arena.getMaxInTeam()) {
-            player.sendMessage(Language.getMsg(player, Messages.TEAM_FULL).replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName()));
+        if (playersInTeam >= arena.getMaxInTeam()) {
+            player.sendMessage(Language.getMsg(player, Messages.TEAM_FULL).replace("{color}", bwt.getColor().chat().toString()).replace("{team}", teamDisplayName));
             return false;
         }
 
@@ -187,51 +207,42 @@ public class TeamSelectorGUI {
         //Balance Teams
         for (ITeam t : arena.getTeams()) {
             if (t == bwt) continue;
-            if (t.getMembers().size() < bwt.getMembers().size()) {
+            int inTeam = TeamManager.getInstance().getPlayersCount(t, arena);
+            if (playersInTeam > inTeam) {
                 if (Config.config.getBoolean(Config.BALANCE_TEAMS)) {
                     player.sendMessage(Language.getMsg(player, Messages.TEAM_NOT_BALANCED));
                     return false;
-                } else if (arena.getStatus() == GameState.starting) {
-                    player.sendMessage(Language.getMsg(player, Messages.CANT_JOIN_WHILE_STARTING));
                 }
             }
         }
 
-        ITeam team = arena.getTeam(player);
+
+        //Check if can switch again
+        if (playerSelection != null) {
+            if (!Config.config.getBoolean(Config.ALLOW_TEAM_CHANGE)) {
+                player.sendMessage(Language.getMsg(player, Messages.SWITCH_DISABLED));
+                return false;
+            }
+        }
+
         //Call event
-        TeamSelectorChooseEvent e = new TeamSelectorChooseEvent(player, arena, bwt, team);
+        TeamSelectorChooseEvent e = new TeamSelectorChooseEvent(player, arena, bwt, playerSelection);
         Bukkit.getPluginManager().callEvent(e);
 
         if (e.isCancelled()) {
             return false;
         }
 
-        //Check if can switch
-        if (arena.getTeam(player) != null) {
-            if (!Config.config.getBoolean(Config.ALLOW_TEAM_CHANGE)) {
-                player.sendMessage(Language.getMsg(player, Messages.SWITCH_DISABLED));
-                return false;
-            }
-            //If allowed remove from team
-            removePlayerFromTeam(player, team);
-        }
+        // set player team
+        TeamManager.getInstance().setPlayerTeam(player, arena, bwt);
 
         //Refresh ream selector item
         giveItem(player, bwt);
 
-        //Add to team
-        bwt.addPlayers(player);
-        player.sendMessage(Language.getMsg(player, Messages.TEAM_JOIN).replace("{color}", TeamColor.getChatColor(bwt.getColor()).toString()).replace("{team}", bwt.getName()).replace("{selected}", String.valueOf(bwt.getMembers().size()))
-                .replace("{total}", String.valueOf(arena.getMaxInTeam())));
-        return true;
-    }
 
-    /**
-     * Remove a player from a team added via TeamSelector
-     */
-    public static void removePlayerFromTeam(Player player, ITeam team) {
-        team.getMembers().remove(player);
-        team.destroyBedHolo(player);
+        player.sendMessage(Language.getMsg(player, Messages.TEAM_JOIN).replace("{color}", bwt.getColor().chat().toString()).replace("{team}", teamDisplayName)
+                .replace("{selected}", String.valueOf(TeamManager.getInstance().getMembers(bwt, arena))).replace("{total}", String.valueOf(arena.getMaxInTeam())));
+        return true;
     }
 
     /**
