@@ -7,6 +7,7 @@ import com.andrei1058.bedwars.api.events.gameplay.TeamAssignEvent;
 import com.andrei1058.bedwars.teamselector.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,7 +20,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
     private final LinkedList<ITeam> teams = new LinkedList<>();
 
     @Override
-    public void assignTeams(IArena arena) {
+    public void assignTeams(@NotNull IArena arena) {
         teams.addAll(arena.getTeams());
 
         // create groups from parties
@@ -37,8 +38,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
                         skippedFromPartyCheck.add(inParty.getUniqueId());
                     }
                 }
-                // some parties do not include the party owner in the members list
-                // so we check if he was included
+                // some parties do not include the party owner in the members list, so we check if he was included
                 if (!partyMembers.contains(player)) {
                     partyMembers.add(player);
                     skippedFromPartyCheck.add(player.getUniqueId());
@@ -67,7 +67,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
         for (ITeam preference : registeredPreference.getSelections().values().stream().distinct().collect(Collectors.toList())) {
             PlayerGroup playerGroup = new PlayerGroup(arena, preference);
             for (Player teamSelector : registeredPreference.getMembers(preference)) {
-                // players amount in that case cannot be bigger than max in team so we don't have to split anything
+                // players amount in that case cannot be bigger than max in team, so we don't have to split anything
                 playerGroup.addPlayer(teamSelector);
             }
             playerGroups.add(playerGroup);
@@ -107,7 +107,7 @@ public class TeamSelectorAssigner implements ITeamAssigner {
                 }
             } else {
                 // priority on preferences that can fill an entire team.
-                // same code is used on low priority and we check if there is still space on a possible compromised preference
+                // same code is used on low priority, and we check if there is still space on a possible compromised preference
                 // assign players to target team
                 for (Player player : playerGroup.getMembers()) {
                     if (playerGroup.getPreference().getMembers().size() < arena.getMaxInTeam()) {

@@ -14,11 +14,12 @@ import com.andrei1058.bedwars.teamselector.teamselector.TeamSelectorGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 
 public class ArenaListener implements Listener {
 
     @EventHandler
-    public void onBwArenaJoin(PlayerJoinArenaEvent e) {
+    public void onBwArenaJoin(@NotNull PlayerJoinArenaEvent e) {
         if (e.isCancelled()) return;
         if (e.isSpectator()) return;
         if (e.getArena() == null) return;
@@ -33,7 +34,7 @@ public class ArenaListener implements Listener {
 
     @EventHandler
     //Remove player from team
-    public void onBwArenaLeave(PlayerLeaveArenaEvent e) {
+    public void onBwArenaLeave(@NotNull PlayerLeaveArenaEvent e) {
         IArena a = e.getArena();
         if (a.getStatus() == GameState.waiting || a.getStatus() == GameState.starting) {
             TeamManager.getInstance().onQuit(a, e.getPlayer());
@@ -41,7 +42,7 @@ public class ArenaListener implements Listener {
     }
 
     @EventHandler
-    public void onStatusChange(GameStateChangeEvent e) {
+    public void onStatusChange(@NotNull GameStateChangeEvent e) {
         if (e.getNewState() == GameState.starting) {
 
             ArenaPreferences pref = TeamManager.getInstance().getArena(e.getArena());
@@ -61,7 +62,7 @@ public class ArenaListener implements Listener {
     }
 
     @EventHandler
-    public void onArenaLoad(ArenaEnableEvent event) {
+    public void onArenaLoad(@NotNull ArenaEnableEvent event) {
         event.getArena().setTeamAssigner(new TeamSelectorAssigner());
     }
 }

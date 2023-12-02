@@ -122,6 +122,9 @@ public class TeamSelectorGUI {
             String teamName = bwt.getDisplayName(Main.bw.getPlayerLanguage(player));
 
             ItemMeta im = i.getItemMeta();
+            if (null == im) {
+                continue;
+            }
             im.setDisplayName(Language.getMsg(player, Messages.CHOICE_NAME).replace("{color}", bwt.getColor().chat().toString()).replace("{team}", teamName)
                     .replace("{selected}", membersCount).replace("{total}", String.valueOf(arena.getMaxInTeam())));
 
@@ -167,7 +170,7 @@ public class TeamSelectorGUI {
     /**
      * Add a player to a team
      *
-     * @return false if cannot add
+     * @return false when cannot add
      */
     public static boolean joinTeam(Player player, String teamName) {
         IArena arena = Main.bw.getArenaUtil().getArenaByPlayer(player);
@@ -187,7 +190,7 @@ public class TeamSelectorGUI {
             return false;
         }
 
-        //Check if the player is in a party
+        //Check if the player is member of a party
         if (Main.bw.getPartyUtil().hasParty(player)) {
             player.sendMessage(Language.getMsg(player, Messages.PARTY_DENIED));
             return false;
@@ -217,7 +220,7 @@ public class TeamSelectorGUI {
         }
 
 
-        //Check if can switch again
+        //Check if player can switch again
         if (playerSelection != null) {
             if (!Config.config.getBoolean(Config.ALLOW_TEAM_CHANGE)) {
                 player.sendMessage(Language.getMsg(player, Messages.SWITCH_DISABLED));
@@ -249,14 +252,17 @@ public class TeamSelectorGUI {
      * Update inventories
      */
     public static void updateGUIs() {
-        for (UUID player : new ArrayList<>(TeamSelectorGUI.openGUIs)) {
-            Player p = Bukkit.getPlayer(player);
-            if (p == null) continue;
-            if (p.getOpenInventory() == null) {
-                openGUIs.remove(player);
+        for (UUID playerId : new ArrayList<>(TeamSelectorGUI.openGUIs)) {
+            Player player = Bukkit.getPlayer(playerId);
+            if (null == player) {
                 continue;
             }
-            TeamSelectorGUI.openGUI(p, true);
+            //noinspection ConstantValue
+            if (null == player.getOpenInventory()) {
+                openGUIs.remove(playerId);
+                continue;
+            }
+            TeamSelectorGUI.openGUI(player, true);
         }
     }
 
@@ -269,6 +275,7 @@ public class TeamSelectorGUI {
             i = new ItemStack(Material.valueOf(Config.config.getString(Config.SELECTOR_ITEM_STACK_MATERIAL)));
         } catch (Exception ex) {
             Main.plugin.getLogger().severe("Team-Selector Material is invalid!");
+            //noinspection CallToPrintStackTrace
             ex.printStackTrace();
             return;
         }
@@ -278,6 +285,9 @@ public class TeamSelectorGUI {
         }
 
         ItemMeta im = i.getItemMeta();
+        if (null == im) {
+            return;
+        }
         im.setLore(Language.getList(p, Messages.SELECTOR_LORE));
         im.setDisplayName(Language.getMsg(p, Messages.SELECTOR_NAME));
         i.setItemMeta(im);

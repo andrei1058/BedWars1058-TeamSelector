@@ -47,7 +47,7 @@ public class Config {
                 SUCCESS_SOUND + ": BLOCK_SHULKER_BOX_CLOSE - The sound to be played when you select a team successfully.\n" +
                 ERROR_SOUND + ": BLOCK_ANVIL_DESTROY - The sound to be played when you can't select a team.\n" +
                 "Sounds for latest version: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html\n" +
-                "Sounds for 1.8 or older: http://docs.codelanx.com/Bukkit/1.8/org/bukkit/Sound.html");
+                "Sounds for 1.8 or older: https://docs.codelanx.com/Bukkit/1.8/org/bukkit/Sound.html");
 
         yml.addDefault(SELECTOR_ITEM_STACK_MATERIAL, Main.bw.getForCurrentVersion("WOOL", "WOOL", "WHITE_WOOL"));
         yml.addDefault(SELECTOR_SLOT, 4);
@@ -76,6 +76,6 @@ public class Config {
     }
 
     private static void sendSoundLog(String sound) {
-        Main.plugin.getLogger().log(Level.SEVERE, sound + " it't not a valid sound for your server version!");
+        Main.plugin.getLogger().log(Level.SEVERE, sound + " it's not a valid sound for your server version!");
     }
 }

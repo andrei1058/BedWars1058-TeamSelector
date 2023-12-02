@@ -49,12 +49,12 @@ public class PlayerGroup implements Comparable<PlayerGroup>{
             if (otherGroup.getPreference() == null) {
                 return Integer.compare(getMembers().size(), otherGroup.getMembers().size());
             } else {
-                // if comparing with a preference group prioritize if can fill an entire team
+                // if comparing with a preference group prioritize if it can fill an entire team
                 return otherGroup.getMembers().size() == arena.getMaxInTeam() ? -1 : 1;
             }
         }
 
-        // if has preference and can fill a team must be always first
+        // if it has preference and can fill a team must be always first
         if (getMembers().size() == arena.getMaxInTeam()){
             return 1;
         }

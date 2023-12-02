@@ -3,6 +3,7 @@ package com.andrei1058.bedwars.teamselector.teamselector;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.andrei1058.bedwars.teamselector.api.events.TeamSelectorAbortEvent;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Getter
 public class ArenaPreferences {
 
     private final IArena arena;
@@ -43,10 +45,6 @@ public class ArenaPreferences {
         return (int) selections.values().stream().filter(team2 -> team2.equals(team)).count();
     }
 
-    public IArena getArena() {
-        return arena;
-    }
-
     public List<Player> getMembers(ITeam team) {
         ArrayList<Player> members = new ArrayList<>();
         if (selections.isEmpty()) return members;
@@ -57,9 +55,5 @@ public class ArenaPreferences {
     public void setPlayerTeam(Player player, ITeam team) {
         selections.remove(player);
         selections.put(player, team);
-    }
-
-    public HashMap<Player, ITeam> getSelections() {
-        return selections;
     }
 }

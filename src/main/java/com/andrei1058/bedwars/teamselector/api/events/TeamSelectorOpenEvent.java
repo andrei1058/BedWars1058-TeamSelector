@@ -1,14 +1,28 @@
 package com.andrei1058.bedwars.teamselector.api.events;
 
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
+@Getter
 public class TeamSelectorOpenEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
+    /**
+     * -- GETTER --
+     *  Get the player
+     *
+     */
     private final Player player;
+    /**
+     * -- GETTER --
+     *  Check if cancelled
+     *
+     */
     private boolean cancelled = false;
 
     /**
@@ -22,29 +36,11 @@ public class TeamSelectorOpenEvent extends Event {
         return HANDLERS;
     }
 
-    /**
-     * Get the player
-     *
-     * @since API 1
-     */
-    public Player getPlayer() {
-        return player;
-    }
-
-    /**
-     * Check if cancelled
-     *
-     * @since API 1
-     */
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
     }
 
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 }

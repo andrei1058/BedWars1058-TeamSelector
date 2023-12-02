@@ -1,6 +1,7 @@
 package com.andrei1058.bedwars.teamselector.configuration;
 
 import com.andrei1058.bedwars.api.language.Language;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,7 +43,7 @@ public class Messages {
         }
     }
 
-    private static void addDefault(Language l, String path, Object english, Object romanian) {
+    private static void addDefault(@NotNull Language l, String path, Object english, Object romanian) {
         if (!l.exists(path)) {
             l.set(path, l.getIso().equals("ro") ? romanian : english);
         }

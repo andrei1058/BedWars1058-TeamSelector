@@ -15,7 +15,6 @@ public class TeamManager {
     private final HashMap<IArena, ArenaPreferences> cachedPreferences = new HashMap<>();
 
     private TeamManager() {
-
     }
 
     public static TeamManager getInstance() {

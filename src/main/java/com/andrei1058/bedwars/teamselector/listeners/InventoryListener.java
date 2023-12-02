@@ -10,12 +10,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class InventoryListener implements Listener {
 
     @EventHandler
     //Prevent inventory move
-    public void onInventoryClick(InventoryClickEvent e) {
+    public void onInventoryClick(@NotNull InventoryClickEvent e) {
         ItemStack i = e.getCurrentItem();
         if (i == null) return;
         if (i.getType() == Material.AIR) return;
